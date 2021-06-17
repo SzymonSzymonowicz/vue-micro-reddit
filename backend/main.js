@@ -1,13 +1,15 @@
+// Express.js
 const express = require("express");
 const app = express();
 app.use(express.json());
 
+// Endpoints
 app.get("/api/subreddit", async (req, res) => {
   let ret = await client.query("SELECT * FROM subreddit;");
   return res.send(ret.rows);
 });
 
-
+// DB connection config
 require("dotenv").config();
 const dbConnectionData = {
   host: process.env.PG_HOST || "127.0.0.1",
@@ -17,11 +19,13 @@ const dbConnectionData = {
   password: process.env.PG_PASSWORD
 };
 
+console.log("Connection parameters: ");
+console.log(dbConnectionData);
+
+// Postgres client setup
 const { Client } = require("pg");
 const client = new Client(dbConnectionData);
 
-console.log("Connection parameters: ");
-console.log(dbConnectionData);
 client
   .connect()
   .then(async () => {
