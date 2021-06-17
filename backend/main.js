@@ -3,10 +3,56 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+// Cookies
+const cookieParser = require("cookie-parser");
+const expressSession = require("express-session");
+
+// Pasport.js
+const passport = require("passport");
+const passportLocal = require("passport-local");
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport.js config
+const validateUser = (username, password, done) => {
+    if (username === "tomek" && password === "tajne") {
+        done(null, {
+            id: username,
+            username: username,
+            password: password
+        });
+    } else {
+        done(null, null);
+    }
+};
+
+// Passport-local config
+passport.use(new passportLocal.Strategy(validateUser));
+passport.deserializeUser((id, done) => {
+    let user = {
+        id: "tomek",
+        username: "tomek",
+        password: "tajne"
+    }
+    // null is error var
+    done(null, {
+        id: user.id,
+        username: user.username,
+        password: user.password
+    });
+});
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
 // Endpoints
 app.get("/api/subreddit", async (req, res) => {
   let ret = await client.query("SELECT * FROM subreddit;");
-  return res.send(ret.rows);
+  res.send(ret.rows);
+});
+
+app.post("/api/login", passport.authenticate("local"), (req, res) => {
+  res.send("Zalogowano");
 });
 
 // DB connection config
@@ -37,4 +83,3 @@ client
     });
   })
   .catch(err => console.error("Connection error", err.stack));
-
