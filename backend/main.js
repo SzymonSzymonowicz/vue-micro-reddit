@@ -11,9 +11,9 @@ const expressSession = require("express-session");
 
 app.use(cookieParser());
 app.use(expressSession({
-    secret: process.env.SECRET || "test",
-    resave: false,
-    saveUninitialized: false
+  secret: process.env.SECRET || "test",
+  resave: false,
+  saveUninitialized: false
 }));
 
 // Pasport.js
@@ -21,9 +21,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 app.use(passport.initialize());
 app.use(passport.session());
+
 // Urls, that don't require authentication
 const allowUrl = ["/api/login"]
-console.log(authenticationMiddleware)
 app.use(authenticationMiddleware(allowUrl));
 
 const getUserByEmailAndPassword = async(email, password) => {
@@ -51,7 +51,7 @@ const authenticateUser = async (email, password, done) => {
       password: user.password,
     });
   } else {
-    done(null, false, { message: "Incorrect credentials." });
+    done(null, false);
   }
 };
 
