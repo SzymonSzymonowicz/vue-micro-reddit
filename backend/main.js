@@ -1,3 +1,5 @@
+const authenticationMiddleware = require("./middleware/authenticate");
+
 // Express.js
 const express = require("express");
 const app = express();
@@ -7,38 +9,54 @@ app.use(express.json());
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 
+app.use(cookieParser());
+app.use(expressSession({
+    secret: process.env.SECRET || "test",
+    resave: false,
+    saveUninitialized: false
+}));
+
 // Pasport.js
 const passport = require("passport");
-const passportLocal = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 app.use(passport.initialize());
 app.use(passport.session());
+// Urls, that don't require authentication
+const allowUrl = ["/api/login"]
+console.log(authenticationMiddleware)
+app.use(authenticationMiddleware(allowUrl));
 
-// Passport.js config
-const validateUser = async (username, password, done) => {
+const getUserByEmailAndPassword = async(email, password) => {
   let ret = await client
     .query(
-      `SELECT * FROM reddit_user WHERE email='${username}' AND password='${password}';`
+      `SELECT * FROM reddit_user WHERE email='${email}' AND password='${password}';`
     )
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      return done(err);
+    });
 
-  console.log(ret.rows[0])
-  
   let user = ret.rows[0];
+  return user;
+}
 
-  // if (username === "tomek" && password === "tajne") {
+// Passport.js config
+const authenticateUser = async (email, password, done) => {
+  let user = await getUserByEmailAndPassword(email, password);
+
   if (user) {
     done(null, {
       id: user.id,
-      username: user.email,
+      email: user.email,
       password: user.password,
     });
   } else {
-    done(null, null);
+    done(null, false, { message: "Incorrect credentials." });
   }
 };
 
 // Passport-local config
-passport.use(new passportLocal.Strategy(validateUser));
+passport.use(new LocalStrategy({usernameField: "email"}, authenticateUser));
 passport.deserializeUser(async (id, done) => {
   let ret = await client
   .query(
@@ -48,14 +66,9 @@ passport.deserializeUser(async (id, done) => {
 
   let user = ret.rows[0];
   
-  // User.findById(id, function (err, user) {
-    // done(err, user);
-  // });
-  // null is error var
-
   done(null, {
     id: user.id,
-    username: user.username,
+    email: user.email,
     password: user.password,
   });
 });
@@ -65,13 +78,23 @@ passport.serializeUser((user, done) => {
 
 // Endpoints
 app.get("/api/subreddit", async (req, res) => {
-  let ret = await client.query("SELECT * FROM subreddit;");
-  res.send(ret.rows);
+  if (req.isAuthenticated()) {
+    let ret = await client.query("SELECT * FROM subreddit;");
+    return res.send(ret.rows)
+  } else {
+    console.log("Failed")
+    return res.status(401).send("No auth")
+  }
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);
   res.send(req.user);
+});
+
+app.post("/api/logout", (req, res) => {
+  req.logOut();
+  res.send("Wylogowano");
 });
 
 // DB connection config
