@@ -14,35 +14,53 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Passport.js config
-const validateUser = (username, password, done) => {
-    if (username === "tomek" && password === "tajne") {
-        done(null, {
-            id: username,
-            username: username,
-            password: password
-        });
-    } else {
-        done(null, null);
-    }
+const validateUser = async (username, password, done) => {
+  let ret = await client
+    .query(
+      `SELECT * FROM reddit_user WHERE email='${username}' AND password='${password}';`
+    )
+    .catch((err) => console.error(err));
+
+  console.log(ret.rows[0])
+  
+  let user = ret.rows[0];
+
+  // if (username === "tomek" && password === "tajne") {
+  if (user) {
+    done(null, {
+      id: user.id,
+      username: user.email,
+      password: user.password,
+    });
+  } else {
+    done(null, null);
+  }
 };
 
 // Passport-local config
 passport.use(new passportLocal.Strategy(validateUser));
-passport.deserializeUser((id, done) => {
-    let user = {
-        id: "tomek",
-        username: "tomek",
-        password: "tajne"
-    }
-    // null is error var
-    done(null, {
-        id: user.id,
-        username: user.username,
-        password: user.password
-    });
+passport.deserializeUser(async (id, done) => {
+  let ret = await client
+  .query(
+    `SELECT * FROM reddit_user WHERE id=${id};`
+  )
+  .catch((err) => console.error(err));
+
+  let user = ret.rows[0];
+  
+  // User.findById(id, function (err, user) {
+    // done(err, user);
+  // });
+  // null is error var
+
+  done(null, {
+    id: user.id,
+    username: user.username,
+    password: user.password,
+  });
 });
 passport.serializeUser((user, done) => {
-    done(null, user.id);
+  done(null, user.id);
 });
 
 // Endpoints
@@ -52,7 +70,8 @@ app.get("/api/subreddit", async (req, res) => {
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
-  res.send("Zalogowano");
+  console.dir(req.user);
+  res.send(req.user);
 });
 
 // DB connection config
@@ -62,7 +81,7 @@ const dbConnectionData = {
   port: process.env.PG_PORT || 5432,
   database: process.env.PG_DATABASE,
   user: process.env.PG_USERNAME,
-  password: process.env.PG_PASSWORD
+  password: process.env.PG_PASSWORD,
 };
 
 console.log("Connection parameters: ");
@@ -82,4 +101,4 @@ client
       console.log(`API server listening at http://localhost:${port}`);
     });
   })
-  .catch(err => console.error("Connection error", err.stack));
+  .catch((err) => console.error("Connection error", err.stack));
