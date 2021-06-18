@@ -1,3 +1,15 @@
+# docker
+docker stop REDDIT-DB
+docker rm REDDIT-DB
+docker run --rm --name REDDIT-DB -p 5432:5432 -e POSTGRES_PASSWORD=tajne -e POSTGRES_DB=reddit-db -d postgres
+
+# docker needs a nap to initialize, otherwhise there are errors
+sleep 2
+
+# schema
+cat ./schema.sql | docker exec -i REDDIT-DB psql -U postgres -d reddit-db
+
+# initial data
 not_dependent=(
 	subreddit.sql
 	reddit_user.sql
@@ -17,8 +29,6 @@ dependent=(
 )
 
 not_dependent+=( "${dependent[@]}" )
-
-cat "$not_dependent"
 
 for f in "${not_dependent[@]}";
 do
