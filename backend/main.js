@@ -7,21 +7,25 @@ app.use(express.json());
 
 // CORS
 const cors = require("cors");
-app.use(cors({
-  credentials: true,
-  origin: "http://localhost:8080"
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:8080",
+  })
+);
 
 // Cookies
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
 
 app.use(cookieParser());
-app.use(expressSession({
-  secret: process.env.SECRET || "test",
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(
+  expressSession({
+    secret: process.env.SECRET || "test",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // Pasport.js
 const passport = require("passport");
@@ -30,10 +34,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Urls, that don't require authentication
-const allowUrl = ["/api/login"]
+const allowUrl = ["/api/login", "/api/register"];
 app.use(authenticationMiddleware(allowUrl));
 
-const getUserByEmailAndPassword = async(email, password) => {
+const getUserByEmailAndPassword = async (email, password) => {
   let ret = await client
     .query(
       `SELECT * FROM reddit_user WHERE email='${email}' AND password='${password}';`
@@ -45,7 +49,7 @@ const getUserByEmailAndPassword = async(email, password) => {
 
   let user = ret.rows[0];
   return user;
-}
+};
 
 // Passport.js config
 const authenticateUser = async (email, password, done) => {
@@ -64,16 +68,14 @@ const authenticateUser = async (email, password, done) => {
 };
 
 // Passport-local config
-passport.use(new LocalStrategy({usernameField: "email"}, authenticateUser));
+passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 passport.deserializeUser(async (id, done) => {
   let ret = await client
-  .query(
-    `SELECT * FROM reddit_user WHERE id=${id};`
-  )
-  .catch((err) => console.error(err));
+    .query(`SELECT * FROM reddit_user WHERE id=${id};`)
+    .catch((err) => console.error(err));
 
   let user = ret.rows[0];
-  
+
   done(null, {
     id: user.id,
     email: user.email,
@@ -87,16 +89,32 @@ passport.serializeUser((user, done) => {
 app.get("/api/subreddit", async (req, res) => {
   if (req.isAuthenticated()) {
     let ret = await client.query("SELECT * FROM subreddit;");
-    return res.send(ret.rows)
+    return res.send(ret.rows);
   } else {
-    console.log("Failed")
-    return res.status(401).send("No auth")
+    console.log("Failed");
+    return res.status(401).send("No auth");
   }
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);
   res.send(req.user);
+});
+
+app.post("/api/register", async (req, res) => {
+  const { email, nickname, password } = req.body;
+
+  let ret = await client
+    .query(
+      `INSERT INTO reddit_user (email, nickname, password) VALUES ('${email}', '${nickname}', '${password}');`
+    )
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+
+  let user = ret.rows[0];
+  res.send(user);
 });
 
 app.post("/api/logout", (req, res) => {
