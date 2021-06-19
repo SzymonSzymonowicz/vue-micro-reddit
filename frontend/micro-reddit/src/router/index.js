@@ -23,8 +23,15 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../components/Subreddit.vue"),
+    component: () => import("../components/Subreddit.vue"),
+  },
+  {
+    path: "/account",
+    name: "Account",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/Account.vue"),
   },
 ];
 

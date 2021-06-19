@@ -5,10 +5,13 @@
         <router-link :to="{ path: '/' }">Home</router-link>
       </div>
 
-      <div class="item" v-if="showLogoutAction">
-        <router-link to="/" @click="logout" style="color: white"
-          >Wyloguj</router-link
-        >
+      <div class="nav" v-if="showLogoutAction">
+        <div class="item">
+          <router-link to="/account">Konto</router-link>
+        </div>
+        <div class="item">
+          <router-link to="/" @click="logout">Wyloguj</router-link>
+        </div>
       </div>
       <div class="nav" v-else>
         <div class="item">
@@ -19,9 +22,7 @@
         </div>
       </div>
     </div>
-    <div>
-      
-    </div>
+    <div></div>
     <router-view @showLogout="showLogout" />
   </div>
 </template>

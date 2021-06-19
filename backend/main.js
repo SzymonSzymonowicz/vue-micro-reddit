@@ -14,7 +14,7 @@ app.use(
   })
 );
 
-app.options('*', cors());
+app.options("*", cors());
 
 // Cookies
 const cookieParser = require("cookie-parser");
@@ -89,14 +89,57 @@ passport.serializeUser((user, done) => {
 
 // Endpoints
 app.post("/api/subreddit", async (req, res) => {
-  let ret = await client.query("SELECT * FROM subreddit;");
-    return res.send(ret.rows);
+  const ret = await client.query("SELECT * FROM subreddit;");
+  return res.send(ret.rows);
 });
 
 app.get("/api/subreddit", async (req, res) => {
-  let ret = await client.query("SELECT * FROM subreddit;");
-    return res.send(ret.rows);
+  const ret = await client.query("SELECT * FROM subreddit;");
+  return res.send(ret.rows);
 });
+
+app.get("/api/account", async (req, res) => {
+  const user = req.user;
+  const ret = await client.query(
+    `SELECT * FROM reddit_user WHERE id = ${user.id};`
+  );
+  return res.send(ret.rows[0]);
+});
+
+app.get("/api/subreddits", async (req, res) => {
+  const user = req.user;
+  const ret = await client.query(`
+    SELECT s.id, s.name, s.description,
+    CASE
+      WHEN res.id IS NOT NULL THEN true::text
+    ELSE false::text
+      END "in"
+    FROM subreddit s LEFT JOIN (
+      SELECT s.id
+      FROM subreddit s INNER JOIN subreddit_user su
+      ON s.id = su.subreddit_id
+      WHERE su.user_id = ${user.id}
+    ) as res
+    ON s.id = res.id;
+  `);
+  return res.send(ret.rows);
+});
+
+/*
+SELECT s.id, s.name, s.description,
+CASE
+WHEN res.id IS NOT NULL THEN true::text
+ELSE false::text
+END "in"
+FROM subreddit s LEFT JOIN (
+SELECT s.id
+FROM subreddit s INNER JOIN subreddit_user su
+ON s.id = su.subreddit_id
+WHERE su.user_id = 1
+) as res
+ON s.id = res.id;
+
+*/
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);
@@ -106,7 +149,7 @@ app.post("/api/login", passport.authenticate("local"), (req, res) => {
 app.post("/api/register", async (req, res) => {
   const { email, nickname, password } = req.body;
 
-  let ret = await client
+  const ret = await client
     .query(
       `INSERT INTO reddit_user (email, nickname, password) VALUES ('${email}', '${nickname}', '${password}');`
     )
