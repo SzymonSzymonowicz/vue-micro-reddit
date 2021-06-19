@@ -1,31 +1,28 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2>{{ welcome }}</h2>
+  <div class="login">
+    <h2>Logowanie</h2>
     <form @submit.prevent>
       <input v-model="user.email" placeholder="Email" />
       <input type="password" v-model="user.password" placeholder="Hasło" />
       <button @click="login">Login</button>
     </form>
-    <p>Message is: {{ user }}</p>
+    <h4 id="errorMessage" v-if="errorMessage">{{ errorMessage }}</h4>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import router from "../router/index";
 
 export default {
   name: "Login",
-  props: {
-    msg: String,
-  },
   data() {
     return {
       user: {
         email: "",
         password: "",
       },
-      welcome: "Have fun",
+      errorMessage: undefined,
     };
   },
   methods: {
@@ -37,14 +34,16 @@ export default {
         .catch((err) => err);
 
       if (result.status === 200) {
-        this.welcome = "Logged in";
-
         const { id, email, isAuthenticated } = result.data;
         localStorage.setItem("id", id);
         localStorage.setItem("email", email);
         localStorage.setItem("isAuthenticated", isAuthenticated);
+
+        this.$emit("showLogout");
+
+        router.push("/test");
       } else {
-        this.welcome = "Bad credentials!";
+        this.errorMessage = "Niepoprawne dane!";
       }
     },
   },
@@ -52,9 +51,31 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style scoped lang="scss">
+.login {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  width: 50%;
+}
+
+form {
+  align-content: center;
+  width: 50%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  * {
+    margin-bottom: 20px;
+  }
+  input {
+    text-align: center;
+  }
+}
+
+#errorMessage {
+  color: red;
 }
 ul {
   list-style-type: none;

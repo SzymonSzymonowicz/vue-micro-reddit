@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Login msg="Welcome to Micro-reddit" />
+    <Login v-bind="$attrs" />
   </div>
 </template>
 
@@ -10,8 +10,18 @@ import Login from "./Login.vue";
 
 export default {
   name: "Home",
+  inheritAttrs: false,
   components: {
     Login,
   },
 };
 </script>
+
+<style lang="scss">
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+</style>

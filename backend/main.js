@@ -14,6 +14,8 @@ app.use(
   })
 );
 
+app.options('*', cors());
+
 // Cookies
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
@@ -86,14 +88,14 @@ passport.serializeUser((user, done) => {
 });
 
 // Endpoints
-app.get("/api/subreddit", async (req, res) => {
-  if (req.isAuthenticated()) {
-    let ret = await client.query("SELECT * FROM subreddit;");
+app.post("/api/subreddit", async (req, res) => {
+  let ret = await client.query("SELECT * FROM subreddit;");
     return res.send(ret.rows);
-  } else {
-    console.log("Failed");
-    return res.status(401).send("No auth");
-  }
+});
+
+app.get("/api/subreddit", async (req, res) => {
+  let ret = await client.query("SELECT * FROM subreddit;");
+    return res.send(ret.rows);
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
@@ -119,7 +121,7 @@ app.post("/api/register", async (req, res) => {
 
 app.post("/api/logout", (req, res) => {
   req.logOut();
-  res.send("Wylogowano");
+  res.sendStatus(200);
 });
 
 // DB connection config
