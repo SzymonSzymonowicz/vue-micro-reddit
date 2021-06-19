@@ -1,17 +1,24 @@
 <template>
-  <div>
+  <div class="login">
     <h1>Rejestracja</h1>
     <h2 v-if="message">{{ message }}</h2>
     <form @submit.prevent>
       <input v-model="email" placeholder="Email" />
-      <span v-if="msg.email">{{ msg.email }}</span>
+      <span class="errorMsg">{{ msg.email }}</span>
+
       <input v-model="user.nickname" placeholder="Nick" />
+      <span class="errorMsg">{{ msg.nickname }}</span>
+
       <input type="password" v-model="user.password" placeholder="Hasło" />
+      <span class="errorMsg">{{ msg.password }}</span>
+
       <input
         type="password"
         v-model="user.confirmPassword"
         placeholder="Powtórz hasło"
       />
+      <span class="errorMsg">{{ msg.confirmPassword }}</span>
+
       <button @click="register">Utwórz konto</button>
     </form>
   </div>
@@ -71,7 +78,32 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.login {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: calc(100% - 100px);
+}
+
+form {
+  align-content: center;
+  width: 25%;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  *:nth-child(2n) {
+    margin-bottom: 20px;
+  }
+  input {
+    text-align: center;
+  }
+}
+
 div {
   h1 {
     color: $orange;
