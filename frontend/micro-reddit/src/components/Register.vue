@@ -46,3 +46,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+div {
+  h1 {
+    color: $orange;
+  }
+}
+</style>
