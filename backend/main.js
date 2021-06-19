@@ -5,6 +5,13 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+// CORS
+const cors = require("cors");
+app.use(cors({
+  credentials: true,
+  origin: "http://localhost:8080"
+}));
+
 // Cookies
 const cookieParser = require("cookie-parser");
 const expressSession = require("express-session");
@@ -88,6 +95,7 @@ app.get("/api/subreddit", async (req, res) => {
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
+  console.log(res)
   console.dir(req.user);
   res.send(req.user);
 });
