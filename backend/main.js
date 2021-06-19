@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Urls, that don't require authentication
-const allowUrl = ["/api/login", "/api/register"];
+const allowUrl = ["/api/login", "/api/register", "/api/account/unique"];
 app.use(authenticationMiddleware(allowUrl));
 
 const getUserByEmailAndPassword = async (email, password) => {
@@ -125,21 +125,21 @@ app.get("/api/subreddits", async (req, res) => {
   return res.send(ret.rows);
 });
 
-/*
-SELECT s.id, s.name, s.description,
-CASE
-WHEN res.id IS NOT NULL THEN true::text
-ELSE false::text
-END "in"
-FROM subreddit s LEFT JOIN (
-SELECT s.id
-FROM subreddit s INNER JOIN subreddit_user su
-ON s.id = su.subreddit_id
-WHERE su.user_id = 1
-) as res
-ON s.id = res.id;
+app.get("/api/account/unique", async (req, res) => {
+  let email = req.query.email;
 
-*/
+  const ret = await client.query(`
+    SELECT EXISTS(
+      SELECT *
+      FROM reddit_user
+      WHERE email='${email}'
+    );
+  `);
+
+  let exists = ret.rows[0]?.exists;
+  
+  res.send(!exists);
+})
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);

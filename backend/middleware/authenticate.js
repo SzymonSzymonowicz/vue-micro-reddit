@@ -1,17 +1,9 @@
 const authenticationMiddleware =
   (whiteList = []) =>
   (req, res, next) => {
-    if (whiteList.find((url) => url === req.url)) {
+    if (whiteList.find((url) => url === req.path)) {
       return next();
     }
-
-    console.log(req);
-    console.log("======================================================================");
-    console.log("USER:")
-    console.log(req.user);
-    console.log("METHOD:")
-    console.log(req.method);
-    console.log("======================================================================");
 
     if (req.method === "OPTIONS" || req.isAuthenticated()) {
       return next();
