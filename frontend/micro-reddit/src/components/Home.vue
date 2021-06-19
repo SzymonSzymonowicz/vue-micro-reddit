@@ -10,7 +10,7 @@ import Login from "./Login.vue";
 
 export default {
   name: "Home",
-  inheritAttrs: false,
+  // inheritAttrs: false,
   components: {
     Login,
   },

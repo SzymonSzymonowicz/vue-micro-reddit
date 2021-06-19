@@ -40,7 +40,6 @@ export default {
         localStorage.setItem("isAuthenticated", isAuthenticated);
 
         this.$emit("showLogout");
-
         router.push("/test");
       } else {
         this.errorMessage = "Niepoprawne dane!";
@@ -57,12 +56,15 @@ export default {
   flex-direction: column;
   text-align: center;
   align-items: center;
-  width: 50%;
+  justify-content: center;
+
+  width: 100%;
+  height: calc(100% - 100px);
 }
 
 form {
   align-content: center;
-  width: 50%;
+  width: 25%;
   min-width: 200px;
   display: flex;
   flex-direction: column;
