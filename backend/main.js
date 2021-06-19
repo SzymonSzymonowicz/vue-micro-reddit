@@ -55,7 +55,8 @@ const authenticateUser = async (email, password, done) => {
     done(null, {
       id: user.id,
       email: user.email,
-      password: user.password,
+      // password: user.password,
+      isAuthenticated: true,
     });
   } else {
     done(null, false);
@@ -76,7 +77,6 @@ passport.deserializeUser(async (id, done) => {
   done(null, {
     id: user.id,
     email: user.email,
-    password: user.password,
   });
 });
 passport.serializeUser((user, done) => {
@@ -95,7 +95,6 @@ app.get("/api/subreddit", async (req, res) => {
 });
 
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
-  console.log(res)
   console.dir(req.user);
   res.send(req.user);
 });

@@ -30,17 +30,19 @@ export default {
   },
   methods: {
     async login() {
-      var certain = this.user || {
-        email: "frayjackrabbit@example.com",
-        password: "frayjackrabbit"
-      };
-
-      let result = await axios.post("http://localhost:5000/api/login", certain, {withCredentials: true}).catch(err => err);
-
-      console.log(result.data);
+      const result = await axios
+        .post("http://localhost:5000/api/login", this.user, {
+          withCredentials: true,
+        })
+        .catch((err) => err);
 
       if (result.status === 200) {
         this.welcome = "Logged in";
+
+        const { id, email, isAuthenticated } = result.data;
+        localStorage.setItem("id", id);
+        localStorage.setItem("email", email);
+        localStorage.setItem("isAuthenticated", isAuthenticated);
       } else {
         this.welcome = "Bad credentials!";
       }
