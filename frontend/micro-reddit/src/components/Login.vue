@@ -15,7 +15,7 @@
 import axios from "axios";
 
 export default {
-  name: "HelloWorld",
+  name: "Login",
   props: {
     msg: String,
   },
