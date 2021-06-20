@@ -108,6 +108,21 @@ router.post("/subreddits", async (req, res) => {
   return res.sendStatus(200);
 });
 
+router.put("/subreddits/:id", async (req, res) => {
+  const { name, description } = req.body;
+  const id = req.params.id;
+
+  await getDb().query(`
+    UPDATE subreddit SET name='${name}', description='${description}'
+    WHERE id=${id};
+  `).catch((err) => {
+    console.log(err);
+    res.sendStatus(500);
+  });
+
+  return res.sendStatus(200);
+});
+
 router.get("/subreddits", async (req, res) => {
   const user = req.user;
   const ret = await getDb().query(`

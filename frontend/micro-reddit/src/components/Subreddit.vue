@@ -16,13 +16,16 @@
           class="btn btn-secondary"
           >Przeglądaj</router-link
         >
+        <button @click="goToEdit" class="btn btn-primary" v-if="isModerator">
+          Edytuj
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import router from "../router";
+import router from "../router";
 import { joinSubreddit } from "../service/subreddit";
 
 export default {
@@ -30,6 +33,7 @@ export default {
   data() {
     return {
       bgColor: "",
+      showEditForm: false,
     };
   },
   props: {
@@ -52,6 +56,12 @@ export default {
     },
     setColor() {
       this.bgColor = this.isIn === "true" ? "rgba(255,185,3,0.32)" : "";
+    },
+    controlEdit() {
+      this.showEditForm = !this.showEditForm;
+    },
+    goToEdit() {
+      router.push(`/edit-subreddit/${this.name}`);
     },
   },
   mounted() {

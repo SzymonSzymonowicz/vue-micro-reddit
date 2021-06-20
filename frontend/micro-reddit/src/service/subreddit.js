@@ -53,6 +53,17 @@ const postSubreddit = (name, description) =>
     )
     .catch((err) => console.log(err));
 
+const putSubreddit = (id, name, description) =>
+  axios
+    .put(
+      `${basePath}/subreddits/${id}`,
+      { name: name, description: description },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch((err) => console.log(err));
+
 const checkUniqueSubredditName = (name) =>
   axios
     .get(`${basePath}/subreddits/unique?name=${name}`, {
@@ -68,4 +79,5 @@ export {
   isLoggedUserInSubreddit,
   postSubreddit,
   checkUniqueSubredditName,
+  putSubreddit,
 };

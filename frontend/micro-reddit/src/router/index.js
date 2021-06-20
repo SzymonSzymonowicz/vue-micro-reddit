@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import Home from "../components/Home.vue";
 import Login from "../components/Login.vue";
 
 const routes = [
@@ -57,6 +56,14 @@ const routes = [
       requiresAuth: true,
     },
     component: () => import("../components/SubredditForm.vue"),
+  },
+  {
+    path: "/edit-subreddit/:name",
+    name: "EditSubreddit",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/EditSubreddit.vue"),
   },
 ];
 

@@ -56,7 +56,6 @@ export default {
   methods: {
     async getVotes() {
       let req = await getPostVotesById(this.post.id);
-      console.log(req.data);
 
       if (req.status === 200) {
         this.votes = req.data;
@@ -64,7 +63,6 @@ export default {
     },
     async hasVoted() {
       let req = await hasUserVotedAlready(this.post.id);
-      console.log(req.data);
 
       if (req.status === 200) {
         this.hasUserVoted = req.data;
@@ -72,7 +70,6 @@ export default {
     },
     async upVote() {
       let req = await voteForPost(this.post.id, 1);
-      console.log(req.data);
 
       if (req.status === 200) {
         await this.hasVoted();
@@ -81,7 +78,6 @@ export default {
     },
     async downVote() {
       let req = await voteForPost(this.post.id, -1);
-      console.log(req.data);
 
       if (req.status === 200) {
         await this.hasVoted();
