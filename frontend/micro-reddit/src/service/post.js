@@ -10,4 +10,48 @@ const getMyPosts = (sortBy) =>
     })
     .catch(logError);
 
-export { getMyPosts };
+const getPostVotesById = (id) =>
+  axios
+    .get(`${basePath}/posts/${id}/votes`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
+const hasUserVotedAlready = (id) =>
+  axios
+    .get(`${basePath}/posts/${id}/has-voted`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
+const voteForPost = (id, vote) =>
+  axios
+    .post(
+      `${basePath}/posts/${id}/votes`,
+      { vote },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch(logError);
+
+const parsePosts = (posts) => {
+  const regex = /watch\?v=/;
+
+  return posts.map((post) => {
+    let { videoUrl, creationDate, ...rest } = post;
+
+    videoUrl = videoUrl?.replace(regex, "embed/");
+    creationDate = new Date(creationDate).toLocaleString();
+
+    return { videoUrl, creationDate, ...rest };
+  });
+};
+
+export {
+  getMyPosts,
+  getPostVotesById,
+  hasUserVotedAlready,
+  voteForPost,
+  parsePosts,
+};

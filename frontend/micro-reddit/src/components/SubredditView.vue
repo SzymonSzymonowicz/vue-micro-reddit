@@ -10,8 +10,10 @@
       @updateParent="getIsIn"
     />
     <span>info: {{ info }}</span>
-    <span>posts: {{ posts.length }}</span>
     <span>isModerator: {{ isModerator }}</span>
+    <div class="contentWrapper alignCenter">
+      <Post v-for="post in posts" :key="post.id" :post="post" />
+    </div>
   </div>
 </template>
 
@@ -22,10 +24,12 @@ import {
   isSubredditModerator,
   isLoggedUserInSubreddit,
 } from "../service/subreddit";
+import { parsePosts } from "../service/post";
+import Post from "./Post.vue";
 import Subreddit from "./Subreddit.vue";
 
 export default {
-  components: { Subreddit },
+  components: { Subreddit, Post },
   name: "SubredditView",
   data() {
     return {
@@ -46,7 +50,7 @@ export default {
       let name = this.$route.params.name;
       let req = await getSubredditPostsByName(name);
       if (req.status === 200) {
-        this.posts = req.data;
+        this.posts = parsePosts(req.data);
       }
     },
     async getIsModerator() {

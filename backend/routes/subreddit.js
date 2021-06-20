@@ -6,11 +6,19 @@ router.get("/subreddits/:name/posts", async (req, res) => {
   const subName = req.params.name;
 
   const ret = await getDb().query(`
-    SELECT p.*
+    SELECT p.id,
+    s."name" as "subreddit",
+    ru.nickname as "author",
+    p.title,
+    p."content",
+    p.creation_date as "creationDate",
+    p.image_path as "imagePath",
+    p.video_url as "videoUrl"
     FROM post p
     INNER JOIN subreddit s
-    ON p.subreddit_id = s.id
-    WHERE s."name"='${subName}';
+      ON p.subreddit_id = s.id
+      INNER JOIN reddit_user ru ON ru.id = p.user_id
+    WHERE s."name"='${subName}';  
   `);
   return res.send(ret.rows);
 });

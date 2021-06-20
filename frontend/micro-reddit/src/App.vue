@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     showLogout() {
-      this.showLogoutAction = true;
+      this.showLogoutAction = localStorage.getItem("isAuthenticated");
     },
     logout: async function logout() {
       const result = await axios.post(

@@ -1,7 +1,20 @@
 <template>
   <div class="post">
     <div class="header">
-      <div class="title">{{ post.title }} # {{ post.id }}</div>
+      <div class="titleBar">
+        <div class="title">{{ post.title }} # {{ post.id }}</div>
+        <div class="vote">
+          <div>{{ votes }}</div>
+          <div v-if="!hasUserVoted">
+            <i @click="upVote" class="like bi bi-hand-thumbs-up-fill"></i>
+            <i
+              @click="downVote"
+              class="dislike bi bi-hand-thumbs-down-fill"
+            ></i>
+          </div>
+        </div>
+      </div>
+
       <div class="auth">Autor: {{ post.author }}</div>
     </div>
     <div class="details">
@@ -24,9 +37,62 @@
     </div>
   </div>
 </template>
+
 <script>
+import {
+  getPostVotesById,
+  hasUserVotedAlready,
+  voteForPost,
+} from "../service/post";
+
 export default {
   name: "Post",
+  data() {
+    return {
+      votes: 0,
+      hasUserVoted: false,
+    };
+  },
+  methods: {
+    async getVotes() {
+      let req = await getPostVotesById(this.post.id);
+      console.log(req.data);
+
+      if (req.status === 200) {
+        this.votes = req.data;
+      }
+    },
+    async hasVoted() {
+      let req = await hasUserVotedAlready(this.post.id);
+      console.log(req.data);
+
+      if (req.status === 200) {
+        this.hasUserVoted = req.data;
+      }
+    },
+    async upVote() {
+      let req = await voteForPost(this.post.id, 1);
+      console.log(req.data);
+
+      if (req.status === 200) {
+        await this.hasVoted();
+        this.getVotes();
+      }
+    },
+    async downVote() {
+      let req = await voteForPost(this.post.id, -1);
+      console.log(req.data);
+
+      if (req.status === 200) {
+        await this.hasVoted();
+        this.getVotes();
+      }
+    },
+  },
+  async mounted() {
+    await this.getVotes();
+    await this.hasVoted();
+  },
   props: {
     post: {},
   },
@@ -42,8 +108,14 @@ export default {
   border: black 2px solid;
   background: lightgray;
   border-radius: 10px;
-  .title {
+
+  .titleBar {
+    display: flex;
+    flex-direction: row;
     font-size: 36px;
+    .title {
+      flex-grow: 1;
+    }
   }
   .header {
     display: flex;
@@ -63,6 +135,24 @@ export default {
   .video {
     display: flex;
     justify-content: center;
+  }
+  .vote {
+    display: flex;
+  }
+}
+
+.like {
+  color: limegreen;
+  &:hover {
+    color: green;
+    transition: 0.5s ease-out;
+  }
+}
+.dislike {
+  color: red;
+  &:hover {
+    color: rgb(165, 8, 8);
+    transition: 0.5s ease-out;
   }
 }
 </style>
