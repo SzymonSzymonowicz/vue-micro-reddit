@@ -44,6 +44,12 @@ export default {
   watch: {
     async "user.email"(value) {
       this.user.email = value;
+
+      if (value === "") {
+        this.msg["email"] = "Wypełnij to pole";
+        return;
+      }
+
       var res = isValidEmail(value);
       if (!res) {
         this.msg["email"] = "Podana wartość nie jest adresem email";
@@ -64,16 +70,14 @@ export default {
     "user.password"(value) {
       this.user.password = value;
 
-      if (this.user.password === "") {
-        this.msg["password"] = "Wypełnij to pole";
-      }
+      this.msg["password"] =
+        this.user.password === "" ? "Wypełnij to pole" : "";
     },
     "user.nickname"(value) {
       this.user.nickname = value;
 
-      if (this.user.nickname === "") {
-        this.msg["nickname"] = "Wypełnij to pole";
-      }
+      this.msg["nickname"] =
+        this.user.nickname === "" ? "Wypełnij to pole" : "";
     },
   },
   methods: {
