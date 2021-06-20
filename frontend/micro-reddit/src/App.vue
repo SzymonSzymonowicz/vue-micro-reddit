@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div id="nav">
       <div class="item">
-        <router-link :to="{ path: '/' }">Home</router-link>
+        <router-link to="/home">Home</router-link>
       </div>
       <div class="nav" v-if="showLogoutAction">
         <div class="item">

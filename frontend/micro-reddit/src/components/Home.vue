@@ -1,19 +1,14 @@
 <template>
   <div class="home">
-    <Login v-bind="$attrs" />
+    <h1>Witaj świecie!</h1>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Login from "./Login.vue";
 
 export default {
   name: "Home",
-  // inheritAttrs: false,
-  components: {
-    Login,
-  },
 };
 </script>
 
