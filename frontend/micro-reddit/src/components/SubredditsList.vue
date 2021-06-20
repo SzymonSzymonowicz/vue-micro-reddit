@@ -6,7 +6,7 @@
       :id="subreddit.id"
       :name="subreddit.name"
       :description="subreddit.description"
-      :isIn="subreddit.in"
+      :isIn="subreddit.isIn"
     />
   </div>
 </template>

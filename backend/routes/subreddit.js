@@ -19,7 +19,7 @@ router.get("/subreddits", async (req, res) => {
     CASE
       WHEN res.id IS NOT NULL THEN true::text
     ELSE false::text
-      END "in"
+      END "isIn"
     FROM subreddit s LEFT JOIN (
       SELECT s.id
       FROM subreddit s INNER JOIN subreddit_user su

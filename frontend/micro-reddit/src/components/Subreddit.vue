@@ -1,10 +1,10 @@
 <template>
-  <div class="card item">
+  <div class="card item" v-bind:style="{ 'background-color': bgColor }">
     <div class="card-header">{{ name }} #{{ id }}</div>
     <div class="card-body">
       <p class="card-text">{{ description }}</p>
       <div class="actions">
-        <router-link to="/" v-if="isIn === 'true'" class="btn btn-primary"
+        <router-link to="/" v-if="isIn === 'false'" class="btn btn-primary"
           >Dołącz</router-link
         >
         <router-link to="/" class="btn btn-secondary">Przeglądaj</router-link>
@@ -16,11 +16,19 @@
 <script>
 export default {
   name: "Subreddit",
+  data() {
+    return {
+      bgColor: "",
+    };
+  },
   props: {
     id: Number,
     name: String,
     description: String,
     isIn: String,
+  },
+  mounted() {
+    this.bgColor = this.isIn === "true" ? "rgba(255,185,3,0.32)" : "";
   },
 };
 </script>
