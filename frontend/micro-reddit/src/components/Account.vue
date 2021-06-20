@@ -76,7 +76,7 @@ export default {
         return;
       }
 
-      let res = await updateAccount().catch((err) => err);
+      let res = await updateAccount(this.user).catch((err) => err);
 
       if (res.status === 200) {
         this.message = "Pomyślna edycja";
