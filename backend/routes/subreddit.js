@@ -31,4 +31,24 @@ router.get("/subreddits", async (req, res) => {
   return res.send(ret.rows);
 });
 
+router.post("/subreddits/:subId/join", async (req, res) => {
+  const userId = req.user.id;
+  const subId = req.params.subId;
+
+  console.log("==========");
+  console.log(userId);
+  console.log(subId);
+
+  if (!(userId && subId)) {
+    return res.sendStatus(400);
+  }
+
+  const ret = await getDb().query(`
+    INSERT INTO subreddit_user VALUES
+    (DEFAULT,${userId},${subId});
+  `);
+
+  return res.sendStatus(200);
+});
+
 module.exports = router;

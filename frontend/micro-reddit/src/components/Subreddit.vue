@@ -4,16 +4,21 @@
     <div class="card-body">
       <p class="card-text">{{ description }}</p>
       <div class="actions">
-        <router-link to="/" v-if="isIn === 'false'" class="btn btn-primary"
-          >Dołącz</router-link
+        <a to="/" v-if="isIn === 'false'" class="btn btn-primary" @click="join"
+          >Dołącz</a
         >
-        <router-link to="/" class="btn btn-secondary">Przeglądaj</router-link>
+        <router-link :to="{ path: `/r/${name}` }" class="btn btn-secondary"
+          >Przeglądaj</router-link
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// import router from "../router";
+import { joinSubreddit } from "../service/subreddit";
+
 export default {
   name: "Subreddit",
   data() {
@@ -27,8 +32,25 @@ export default {
     description: String,
     isIn: String,
   },
+  methods: {
+    async join() {
+      let req = await joinSubreddit(this.id);
+
+      if (req.status === 200) {
+        // maybe emit and update parent? or just router to subreddit
+        this.$emit("getSubreddits");
+        // router.push(`/r/${this.name}`);
+      }
+    },
+    setColor() {
+      this.bgColor = this.isIn === "true" ? "rgba(255,185,3,0.32)" : "";
+    },
+  },
   mounted() {
-    this.bgColor = this.isIn === "true" ? "rgba(255,185,3,0.32)" : "";
+    this.setColor();
+  },
+  updated() {
+    this.setColor();
   },
 };
 </script>

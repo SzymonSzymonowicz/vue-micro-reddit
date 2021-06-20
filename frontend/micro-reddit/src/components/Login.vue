@@ -36,7 +36,7 @@ export default {
         localStorage.setItem("isAuthenticated", isAuthenticated);
 
         this.$emit("showLogout");
-        router.push("/test");
+        router.push("/home");
       } else {
         this.errorMessage = "Nieprawidłowe dane!";
       }

@@ -7,6 +7,7 @@
       :name="subreddit.name"
       :description="subreddit.description"
       :isIn="subreddit.isIn"
+      @getSubreddits="getSubreddits"
     />
   </div>
 </template>
@@ -24,11 +25,16 @@ export default {
       subreddits: [],
     };
   },
+  methods: {
+    async getSubreddits() {
+      const result = await axios.get("http://localhost:5000/api/subreddits", {
+        withCredentials: true,
+      });
+      this.subreddits = result.data;
+    },
+  },
   async mounted() {
-    const result = await axios.get("http://localhost:5000/api/subreddits", {
-      withCredentials: true,
-    });
-    this.subreddits = result.data;
+    await this.getSubreddits();
 
     // const result = await fetch("http://localhost:5000/api/subreddit", {
     //   method: "POST",
