@@ -10,6 +10,19 @@ router.get("/account", async (req, res) => {
   return res.send(ret.rows[0]);
 });
 
+router.put("/account", async (req, res) => {
+  let { nickname, password } = req.body
+  let userId = req.user.id;
+
+  const ret = await getDb().query(`
+    UPDATE reddit_user
+    SET nickname='${nickname}', password='${password}'   
+    WHERE id=${userId};
+  `);
+
+  res.sendStatus(200);
+});
+
 router.get("/account/unique", async (req, res) => {
   let email = req.query.email;
 

@@ -11,10 +11,13 @@ const checkUniqueEmail = (email) =>
     .catch(logError);
 
 const login = (user) =>
-  axios
-    .post(`${basePath}/login`, user, {
-      withCredentials: true,
-    })
-    .catch(logError);
+  axios.post(`${basePath}/login`, user, {
+    withCredentials: true,
+  });
 
-export { checkUniqueEmail, login };
+const updateAccount = (user) =>
+  axios.put("http://localhost:5000/api/account", user, {
+    withCredentials: true,
+  });
+
+export { checkUniqueEmail, login, updateAccount };

@@ -102,8 +102,8 @@ const subreddit = require("./routes/subreddit");
 app.use(apiPrefix, subreddit);
 
 
-  const initDb = require("./db").initDb;
-  const getDb = require("./db").getDb;
+const initDb = require("./db").initDb;
+const getDb = require("./db").getDb;
   
 initDb(function (err) {
   if (err) {

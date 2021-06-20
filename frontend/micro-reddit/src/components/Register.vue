@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
+  <div class="formView">
     <h1>Rejestracja</h1>
-    <form @submit.prevent>
+    <form @submit.prevent autocomplete="off">
       <input v-model="user.email" placeholder="Email" />
       <span class="errorMsg">{{ msg.email }}</span>
 
@@ -62,10 +62,10 @@ export default {
     },
     "user.confirmPassword"(value) {
       this.user.confirmPassword = value;
-
-      if (this.user.confirmPassword !== this.user.password) {
-        this.msg["confirmPassword"] = "Hasła się nie zgadzają";
-      }
+      this.msg["confirmPassword"] =
+        this.user.confirmPassword !== this.user.password
+          ? "Hasła się nie zgadzają"
+          : "";
     },
     "user.password"(value) {
       this.user.password = value;
@@ -100,38 +100,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.login {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: calc(100% - 100px);
-}
-
-form {
-  align-content: center;
-  width: 25%;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-  *:nth-child(2n) {
-    margin-bottom: 20px;
-  }
-  input {
-    text-align: center;
-  }
-}
-
 div {
   h1 {
     color: $orange;
   }
-}
-
-.errorMsg {
-  color: red;
 }
 </style>

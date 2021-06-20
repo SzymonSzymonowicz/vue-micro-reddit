@@ -4,7 +4,7 @@
     <form @submit.prevent>
       <input v-model="user.email" placeholder="Email" />
       <input type="password" v-model="user.password" placeholder="Hasło" />
-      <button @click="doLogin">Login</button>
+      <button @click="doLogin" class="btn btn-primary">Login</button>
     </form>
     <h4 id="errorMessage" v-if="errorMessage">{{ errorMessage }}</h4>
   </div>
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     async doLogin() {
-      const result = await login(this.user);
+      const result = await login(this.user).catch((err) => err);
 
       if (result.status === 200) {
         const { id, email, isAuthenticated } = result.data;
@@ -38,7 +38,7 @@ export default {
         this.$emit("showLogout");
         router.push("/test");
       } else {
-        this.errorMessage = "Niepoprawne dane!";
+        this.errorMessage = "Nieprawidłowe dane!";
       }
     },
   },
