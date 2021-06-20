@@ -10,8 +10,6 @@
       :hideStepInto="true"
       @updateParent="getIsIn"
     />
-    <span>info: {{ info }}</span>
-    <span>isModerator: {{ isModerator }}</span>
     <div class="contentWrapper alignCenter">
       <Post v-for="post in posts" :key="post.id" :post="post" />
     </div>
