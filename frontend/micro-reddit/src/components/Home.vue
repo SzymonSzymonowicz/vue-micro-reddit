@@ -6,20 +6,25 @@
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="header">
         <div class="title">{{ post.title }} # {{ post.id }}</div>
-        <div class="auth">Autor: {{ post.authorId }}</div>
+        <div class="auth">Autor: {{ post.author }}</div>
       </div>
       <div class="details">
-        <div class="subreddit">Subreddit: {{ post.subreddit_id }}</div>
+        <div class="subreddit">
+          Subreddit:
+          <router-link :to="{ path: `/r/${post.subreddit}` }">{{
+            post.subreddit
+          }}</router-link>
+        </div>
         <div class="date">
-          {{ post.creation_date }}
+          {{ post.creationDate }}
         </div>
       </div>
-      <div class="image">
-        <img :src="post.image_path" />
+      <div class="image" v-if="post.imagePath">
+        <img :src="post.imagePath" />
       </div>
       <div class="content">{{ post.content }}</div>
-      <div class="video" v-if="post.video_url">
-        <iframe width="640" height="360" :src="post.video_url" />
+      <div class="video" v-if="post.videoUrl">
+        <iframe width="640" height="360" :src="post.videoUrl" />
       </div>
     </div>
   </div>
@@ -47,12 +52,12 @@ export default {
       const regex = /watch\?v=/;
 
       return posts?.map((post) => {
-        let { video_url, creation_date, ...rest } = post;
+        let { videoUrl, creationDate, ...rest } = post;
 
-        video_url = video_url?.replace(regex, "embed/");
-        creation_date = new Date(creation_date).toLocaleString();
+        videoUrl = videoUrl?.replace(regex, "embed/");
+        creationDate = new Date(creationDate).toLocaleString();
 
-        return { video_url, creation_date, ...rest };
+        return { videoUrl, creationDate, ...rest };
       });
     },
   },
@@ -79,7 +84,8 @@ export default {
     margin: 20px 0px;
     padding: 20px;
     border: black 2px solid;
-    // border-radius: 10px;
+    background: lightgray;
+    border-radius: 10px;
     .title {
       font-size: 36px;
     }
