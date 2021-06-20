@@ -35,9 +35,17 @@ const isSubredditModerator = (name) =>
     })
     .catch((err) => console.log(err));
 
+const isLoggedUserInSubreddit = (name) =>
+  axios
+    .get(`${basePath}/subreddits/${name}/is-in`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
 export {
   joinSubreddit,
   getSubredditByName,
   getSubredditPostsByName,
   isSubredditModerator,
+  isLoggedUserInSubreddit,
 };

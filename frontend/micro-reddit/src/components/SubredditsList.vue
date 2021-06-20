@@ -7,7 +7,7 @@
       :name="subreddit.name"
       :description="subreddit.description"
       :isIn="subreddit.isIn"
-      @getSubreddits="getSubreddits"
+      @updateParent="getSubreddits"
     />
   </div>
 </template>

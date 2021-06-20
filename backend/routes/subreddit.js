@@ -42,6 +42,28 @@ router.get("/subreddits/:name/is-moderator", async (req, res) => {
   return res.send(isModerator);
 })
 
+router.get("/subreddits/:name/is-in", async (req, res) => {
+  const user = req.user;
+  const subName = req.params.name;
+
+  const ret = await getDb().query(`
+    SELECT EXISTS(
+      SELECT * 
+      FROM subreddit_user su
+      INNER JOIN subreddit s
+      ON s.id = su.subreddit_id
+      WHERE s.name='${subName}' AND su.user_id=${user.id}
+    );
+  `).catch(err => console.log(err));
+
+  let isIn = ret.rows[0]?.exists;
+
+  return res.send(isIn);
+})
+
+
+
+
 router.get("/subreddits", async (req, res) => {
   const user = req.user;
   const ret = await getDb().query(`

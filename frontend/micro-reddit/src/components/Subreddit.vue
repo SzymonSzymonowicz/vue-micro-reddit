@@ -38,7 +38,7 @@ export default {
 
       if (req.status === 200) {
         // maybe emit and update parent? or just router to subreddit
-        this.$emit("getSubreddits");
+        this.$emit("updateParent");
         // router.push(`/r/${this.name}`);
       }
     },
