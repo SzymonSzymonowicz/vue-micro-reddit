@@ -40,7 +40,7 @@ const allowUrl = ["/api/login", "/api/register", "/api/account/unique"];
 app.use(authenticationMiddleware(allowUrl));
 
 const getUserByEmailAndPassword = async (email, password) => {
-  let ret = await client
+  let ret = await getDb()
     .query(
       `SELECT * FROM reddit_user WHERE email='${email}' AND password='${password}';`
     )
@@ -72,7 +72,7 @@ const authenticateUser = async (email, password, done) => {
 // Passport-local config
 passport.use(new LocalStrategy({ usernameField: "email" }, authenticateUser));
 passport.deserializeUser(async (id, done) => {
-  let ret = await client
+  let ret = await getDb()
     .query(`SELECT * FROM reddit_user WHERE id=${id};`)
     .catch((err) => console.error(err));
 
@@ -88,110 +88,33 @@ passport.serializeUser((user, done) => {
 });
 
 // Endpoints
-app.post("/api/subreddit", async (req, res) => {
-  const ret = await client.query("SELECT * FROM subreddit;");
-  return res.send(ret.rows);
-});
-
-app.get("/api/subreddit", async (req, res) => {
-  const ret = await client.query("SELECT * FROM subreddit;");
-  return res.send(ret.rows);
-});
-
-app.get("/api/account", async (req, res) => {
-  const user = req.user;
-  const ret = await client.query(
-    `SELECT * FROM reddit_user WHERE id = ${user.id};`
-  );
-  return res.send(ret.rows[0]);
-});
-
-app.get("/api/subreddits", async (req, res) => {
-  const user = req.user;
-  const ret = await client.query(`
-    SELECT s.id, s.name, s.description,
-    CASE
-      WHEN res.id IS NOT NULL THEN true::text
-    ELSE false::text
-      END "in"
-    FROM subreddit s LEFT JOIN (
-      SELECT s.id
-      FROM subreddit s INNER JOIN subreddit_user su
-      ON s.id = su.subreddit_id
-      WHERE su.user_id = ${user.id}
-    ) as res
-    ON s.id = res.id;
-  `);
-  return res.send(ret.rows);
-});
-
-app.get("/api/account/unique", async (req, res) => {
-  let email = req.query.email;
-
-  const ret = await client.query(`
-    SELECT EXISTS(
-      SELECT *
-      FROM reddit_user
-      WHERE email='${email}'
-    );
-  `);
-
-  let exists = ret.rows[0]?.exists;
-  
-  res.send(!exists);
-})
-
 app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);
   res.send(req.user);
 });
 
-app.post("/api/register", async (req, res) => {
-  const { email, nickname, password } = req.body;
+const apiPrefix = "/api";
 
-  const ret = await client
-    .query(
-      `INSERT INTO reddit_user (email, nickname, password) VALUES ('${email}', '${nickname}', '${password}');`
-    )
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
-    });
+const account = require("./routes/account");
+app.use(apiPrefix, account);
 
-  let user = ret.rows[0];
-  res.send(user);
-});
+const subreddit = require("./routes/subreddit");
+app.use(apiPrefix, subreddit);
 
-app.post("/api/logout", (req, res) => {
-  req.logOut();
-  res.sendStatus(200);
-});
 
-// DB connection config
-require("dotenv").config();
-const dbConnectionData = {
-  host: process.env.PG_HOST || "127.0.0.1",
-  port: process.env.PG_PORT || 5432,
-  database: process.env.PG_DATABASE,
-  user: process.env.PG_USERNAME,
-  password: process.env.PG_PASSWORD,
-};
+  const initDb = require("./db").initDb;
+  const getDb = require("./db").getDb;
+  
+initDb(function (err) {
+  if (err) {
+    console.error("Connection error", err.stack)
+    throw err;
+  }
 
-console.log("Connection parameters: ");
-console.log(dbConnectionData);
+  const port = process.env.PORT || 5000;
 
-// Postgres client setup
-const { Client } = require("pg");
-const client = new Client(dbConnectionData);
+  app.listen(port, () => {
+    console.log(`API server listening at http://localhost:${port}`);
+  });
+})
 
-client
-  .connect()
-  .then(async () => {
-    console.log("Connected to PostgreSQL");
-    const port = process.env.PORT || 5000;
-
-    app.listen(port, () => {
-      console.log(`API server listening at http://localhost:${port}`);
-    });
-  })
-  .catch((err) => console.error("Connection error", err.stack));
