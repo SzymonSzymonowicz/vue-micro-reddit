@@ -17,6 +17,7 @@
 
 <script>
 import axios from "axios";
+// import { checkUniqueEmail } from "@/service/account";
 
 export default {
   name: "Account",

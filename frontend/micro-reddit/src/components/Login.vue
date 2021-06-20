@@ -4,15 +4,15 @@
     <form @submit.prevent>
       <input v-model="user.email" placeholder="Email" />
       <input type="password" v-model="user.password" placeholder="Hasło" />
-      <button @click="login">Login</button>
+      <button @click="doLogin">Login</button>
     </form>
     <h4 id="errorMessage" v-if="errorMessage">{{ errorMessage }}</h4>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import router from "../router/index";
+import { login } from "@/service/account";
 
 export default {
   name: "Login",
@@ -26,12 +26,8 @@ export default {
     };
   },
   methods: {
-    async login() {
-      const result = await axios
-        .post("http://localhost:5000/api/login", this.user, {
-          withCredentials: true,
-        })
-        .catch((err) => err);
+    async doLogin() {
+      const result = await login(this.user);
 
       if (result.status === 200) {
         const { id, email, isAuthenticated } = result.data;

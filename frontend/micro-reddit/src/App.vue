@@ -18,7 +18,7 @@
           <router-link to="/register">Rejestracja</router-link>
         </div>
         <div class="item">
-          <router-link to="/" @click="logout">Zaloguj</router-link>
+          <router-link to="/">Zaloguj</router-link>
         </div>
       </div>
     </div>

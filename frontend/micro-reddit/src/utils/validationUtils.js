@@ -4,4 +4,24 @@ const isValidEmail = (email) => {
   return re.test(email);
 };
 
-export { isValidEmail };
+const isErrorObjectNotEmpty = (obj) => {
+  if (!obj) {
+    return false;
+  }
+
+  if (!Object.keys(obj).length) {
+    return false;
+  }
+
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      if (obj[key] !== "" && obj[key] !== null && obj[key] !== undefined) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+export { isValidEmail, isErrorObjectNotEmpty };

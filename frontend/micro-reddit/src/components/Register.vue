@@ -18,7 +18,7 @@
       />
       <span class="errorMsg">{{ msg.confirmPassword }}</span>
 
-      <button @click="register">Utwórz konto</button>
+      <button @click="register" class="btn btn-primary">Utwórz konto</button>
     </form>
   </div>
 </template>
@@ -26,7 +26,8 @@
 <script>
 import axios from "axios";
 import router from "../router";
-import { isValidEmail } from "@/utils/validationUtils";
+import { isValidEmail, isErrorObjectNotEmpty } from "@/utils/validationUtils";
+import { checkUniqueEmail } from "@/service/account";
 
 export default {
   data() {
@@ -41,8 +42,7 @@ export default {
     };
   },
   watch: {
-    async email(value) {
-      // binding this to the data value in the email input
+    async "user.email"(value) {
       this.user.email = value;
       var res = isValidEmail(value);
       if (!res) {
@@ -50,17 +50,39 @@ export default {
         return;
       }
 
-      let res2 = await axios
-        .get(`http://localhost:5000/api/account/unique?email=${value}`, {
-          withCredentials: true,
-        })
-        .catch((err) => console.log(err));
+      let res2 = await checkUniqueEmail(value);
 
       this.msg["email"] = res2.data ? "" : "Podany email jest już zajęty";
+    },
+    "user.confirmPassword"(value) {
+      this.user.confirmPassword = value;
+
+      if (this.user.confirmPassword !== this.user.password) {
+        this.msg["confirmPassword"] = "Hasła się nie zgadzają";
+      }
+    },
+    "user.password"(value) {
+      this.user.password = value;
+
+      if (this.user.password === "") {
+        this.msg["password"] = "Wypełnij to pole";
+      }
+    },
+    "user.nickname"(value) {
+      this.user.nickname = value;
+
+      if (this.user.nickname === "") {
+        this.msg["nickname"] = "Wypełnij to pole";
+      }
     },
   },
   methods: {
     async register() {
+      if (isErrorObjectNotEmpty(this.msg)) {
+        console.log("Validation failed!");
+        return;
+      }
+
       let res = await axios
         .post("http://localhost:5000/api/register", this.user)
         .catch((err) => err);
