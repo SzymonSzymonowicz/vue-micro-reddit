@@ -101,6 +101,8 @@ app.use(apiPrefix, account);
 const subreddit = require("./routes/subreddit");
 app.use(apiPrefix, subreddit);
 
+const post = require("./routes/post");
+app.use(apiPrefix, post);
 
 const initDb = require("./db").initDb;
 const getDb = require("./db").getDb;
