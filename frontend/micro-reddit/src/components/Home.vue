@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <button @click="sortById" class="btn btn-primary mt-3">
+      Sortuj po NEW
+    </button>
     <div v-for="post in posts" :key="post.id" class="post">
       <div class="header">
         <div class="title">{{ post.title }} # {{ post.id }}</div>
@@ -32,26 +35,31 @@ export default {
       posts: [],
     };
   },
-  computed: {
-    // parsedDate(stringDate) {
-    // const date = new Date(stringDate);
-    //
-    // return date;
-    // },
-  },
-  async mounted() {
-    let req = await getMyPosts();
+  methods: {
+    async sortById() {
+      let req = await getMyPosts("date");
 
-    const regex = /watch\?v=/;
+      if (req.status === 200) {
+        this.posts = this.parsePosts(req.data);
+      }
+    },
+    parsePosts(posts) {
+      const regex = /watch\?v=/;
 
-    if (req.status === 200) {
-      this.posts = req.data.map((post) => {
+      return posts?.map((post) => {
         let { video_url, ...rest } = post;
 
         video_url = video_url?.replace(regex, "embed/");
 
         return { video_url, ...rest };
       });
+    },
+  },
+  async mounted() {
+    let req = await getMyPosts();
+
+    if (req.status === 200) {
+      this.posts = this.parsePosts(req.data);
     }
   },
 };
@@ -77,6 +85,9 @@ export default {
     .header {
       display: flex;
       flex-direction: column;
+    }
+    .content {
+      margin: 20px 0px;
     }
     .image {
       display: flex;
