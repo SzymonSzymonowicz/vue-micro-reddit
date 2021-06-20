@@ -2,6 +2,9 @@
   <div class="card item" v-bind:style="{ 'background-color': bgColor }">
     <div class="card-header">{{ name }} #{{ id }}</div>
     <div class="card-body">
+      <p class="card-text h4" v-if="isModerator">
+        <i class="bi bi-award-fill"></i> Jesteś Moderatorem tego subreddita
+      </p>
       <p class="card-text">{{ description }}</p>
       <div class="actions">
         <a to="/" v-if="isIn === 'false'" class="btn btn-primary" @click="join"
@@ -31,6 +34,7 @@ export default {
     name: String,
     description: String,
     isIn: String,
+    isModerator: Boolean,
   },
   methods: {
     async join() {

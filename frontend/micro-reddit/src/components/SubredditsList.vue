@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="contentWrapper">
     <Subreddit
       v-for="subreddit in subreddits"
       :key="subreddit.id"
@@ -46,11 +46,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  padding: 0 30px;
-  height: fit-content;
-}
-</style>
+<style lang="scss" scoped></style>

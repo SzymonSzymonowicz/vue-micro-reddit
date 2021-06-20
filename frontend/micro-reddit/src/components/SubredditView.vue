@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <h1>{{ `Witaj na /r/ ${this.$route.params.name}!` }}</h1>
+  <div class="contentWrapper">
+    <h1>{{ `Witaj na /r/ ${this?.$route.params.name}!` }}</h1>
     <Subreddit
       :id="info.id"
       :name="info.name"
       :description="info.description"
       :isIn="info.isIn"
+      :isModerator="isModerator"
       @updateParent="getIsIn"
     />
-    <p>info: {{ info }}</p>
-    <p>posts: {{ posts.length }}</p>
-    <p>isModerator: {{ isModerator }}</p>
+    <span>info: {{ info }}</span>
+    <span>posts: {{ posts.length }}</span>
+    <span>isModerator: {{ isModerator }}</span>
   </div>
-  <!-- <i class="bi bi-award-fill"></i> -->
 </template>
 
 <script>
@@ -72,5 +72,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped></style>
