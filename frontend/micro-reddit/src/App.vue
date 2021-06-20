@@ -4,8 +4,15 @@
       <div class="item">
         <router-link :to="{ path: '/' }">Home</router-link>
       </div>
-
       <div class="nav" v-if="showLogoutAction">
+        <div class="item">
+          <router-link to="/subreddits">Wszystkie subreddity</router-link>
+        </div>
+      </div>
+
+      <!-- //subreddits -->
+
+      <div class="nav growLeft" v-if="showLogoutAction">
         <div class="item">
           <router-link to="/account">Konto</router-link>
         </div>
@@ -13,7 +20,7 @@
           <router-link to="/" @click="logout">Wyloguj</router-link>
         </div>
       </div>
-      <div class="nav" v-else>
+      <div class="nav growLeft" v-else>
         <div class="item">
           <router-link to="/register">Rejestracja</router-link>
         </div>
@@ -92,8 +99,8 @@ export default {
     margin: 0px 20px;
   }
 
-  .item:first-of-type {
-    margin-right: auto;
+  .growLeft {
+    margin-left: auto;
   }
 
   a {

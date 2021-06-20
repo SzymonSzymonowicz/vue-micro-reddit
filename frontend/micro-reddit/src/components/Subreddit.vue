@@ -1,38 +1,43 @@
 <template>
-  <ol>
-    <li v-for="subreddit in subreddits" v-bind:key="subreddit.id">
-      {{ subreddit }}
-    </li>
-  </ol>
+  <div class="card item">
+    <div class="card-header">{{ name }} #{{ id }}</div>
+    <div class="card-body">
+      <p class="card-text">{{ description }}</p>
+      <div class="actions">
+        <router-link to="/" v-if="isIn === 'true'" class="btn btn-primary"
+          >Dołącz</router-link
+        >
+        <router-link to="/" class="btn btn-secondary">Przeglądaj</router-link>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import axios from "axios";
-// axios.defaults.withCredentials = true;
-
 export default {
   name: "Subreddit",
-  data() {
-    return {
-      subreddits: [],
-    };
-  },
-  async mounted() {
-    const result = await axios.post(
-      "http://localhost:5000/api/subreddit",
-      {},
-      {
-        withCredentials: true,
-      }
-    );
-    this.subreddits = result.data;
-
-    // const result = await fetch("http://localhost:5000/api/subreddit", {
-    //   method: "POST",
-    //   credentials: "include",
-    // }).catch((err) => err);
-    // const data = await result.json();
-    // this.subreddits = data;
+  props: {
+    id: Number,
+    name: String,
+    description: String,
+    isIn: String,
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.item {
+  margin: 20px 0px;
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    a {
+      margin-left: 20px;
+    }
+  }
+}
+
+a {
+  text-align: right;
+}
+</style>

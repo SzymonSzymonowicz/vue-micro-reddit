@@ -18,12 +18,12 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../components/Register.vue"),
   },
   {
-    path: "/test",
-    name: "Subreddit",
+    path: "/subreddits",
+    name: "SubredditsList",
     meta: {
       requiresAuth: true,
     },
-    component: () => import("../components/Subreddit.vue"),
+    component: () => import("../components/SubredditsList.vue"),
   },
   {
     path: "/account",
