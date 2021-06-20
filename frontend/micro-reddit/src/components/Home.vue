@@ -47,11 +47,12 @@ export default {
       const regex = /watch\?v=/;
 
       return posts?.map((post) => {
-        let { video_url, ...rest } = post;
+        let { video_url, creation_date, ...rest } = post;
 
         video_url = video_url?.replace(regex, "embed/");
+        creation_date = new Date(creation_date).toLocaleString();
 
-        return { video_url, ...rest };
+        return { video_url, creation_date, ...rest };
       });
     },
   },

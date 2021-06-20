@@ -2,15 +2,45 @@ const express = require("express");
 const router = express.Router();
 const getDb = require("../db").getDb;
 
-router.post("/subreddit", async (req, res) => {
-  const ret = await getDb().query("SELECT * FROM subreddit;");
+router.get("/subreddits/:name/posts", async (req, res) => {
+  const subName = req.params.name;
+
+  const ret = await getDb().query(`
+    SELECT p.*
+    FROM post p
+    INNER JOIN subreddit s
+    ON p.subreddit_id = s.id
+    WHERE s."name"='${subName}';
+  `);
   return res.send(ret.rows);
 });
 
-router.get("/subreddit", async (req, res) => {
-  const ret = await getDb().query("SELECT * FROM subreddit;");
-  return res.send(ret.rows);
+router.get("/subreddits/:name", async (req, res) => {
+  const subName = req.params.name;
+  const ret = await getDb().query(
+    `SELECT * FROM subreddit s WHERE s.name='${subName}';`
+  );
+  return res.send(ret.rows[0]);
 });
+
+router.get("/subreddits/:name/is-moderator", async (req, res) => {
+  const user = req.user;
+  const subName = req.params.name;
+
+  const ret = await getDb().query(`
+    SELECT EXISTS(
+      SELECT * 
+      FROM subreddit_moderator sm
+      INNER JOIN subreddit s
+      ON s.id = sm.subreddit_id
+      WHERE s.name='${subName}' AND sm.user_id=${user.id}
+    );
+  `).catch(err => console.log(err));
+
+  let isModerator = ret.rows[0]?.exists;
+
+  return res.send(isModerator);
+})
 
 router.get("/subreddits", async (req, res) => {
   const user = req.user;
@@ -34,10 +64,6 @@ router.get("/subreddits", async (req, res) => {
 router.post("/subreddits/:subId/join", async (req, res) => {
   const userId = req.user.id;
   const subId = req.params.subId;
-
-  console.log("==========");
-  console.log(userId);
-  console.log(subId);
 
   if (!(userId && subId)) {
     return res.sendStatus(400);

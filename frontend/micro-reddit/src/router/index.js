@@ -42,6 +42,14 @@ const routes = [
     },
     component: () => import("../components/Account.vue"),
   },
+  {
+    path: "/r/:name",
+    name: "SubredditView",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/SubredditView.vue"),
+  },
 ];
 
 const router = createRouter({

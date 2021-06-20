@@ -14,4 +14,30 @@ const joinSubreddit = (subredditId) =>
     )
     .catch(logError);
 
-export { joinSubreddit };
+const getSubredditByName = (name) =>
+  axios
+    .get(`${basePath}/subreddits/${name}`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
+const getSubredditPostsByName = (name) =>
+  axios
+    .get(`${basePath}/subreddits/${name}/posts`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
+const isSubredditModerator = (name) =>
+  axios
+    .get(`${basePath}/subreddits/${name}/is-moderator`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
+export {
+  joinSubreddit,
+  getSubredditByName,
+  getSubredditPostsByName,
+  isSubredditModerator,
+};
