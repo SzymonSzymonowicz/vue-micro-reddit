@@ -50,6 +50,14 @@ const routes = [
     },
     component: () => import("../components/SubredditView.vue"),
   },
+  {
+    path: "/new-subreddit",
+    name: "SubredditForm",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/SubredditForm.vue"),
+  },
 ];
 
 const router = createRouter({

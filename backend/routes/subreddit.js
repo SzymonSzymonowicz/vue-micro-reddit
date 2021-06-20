@@ -23,6 +23,22 @@ router.get("/subreddits/:name/posts", async (req, res) => {
   return res.send(ret.rows);
 });
 
+router.get("/subreddits/unique", async (req, res) => {
+  let name = req.query.name;
+
+  const ret = await getDb().query(`
+    SELECT EXISTS(
+      SELECT *
+      FROM subreddit
+      WHERE name='${name}'
+    );
+  `);
+
+  let exists = ret.rows[0]?.exists;
+
+  res.send(!exists);
+});
+
 router.get("/subreddits/:name", async (req, res) => {
   const subName = req.params.name;
   const ret = await getDb().query(
@@ -69,8 +85,28 @@ router.get("/subreddits/:name/is-in", async (req, res) => {
   return res.send(isIn);
 })
 
+router.post("/subreddits", async (req, res) => {
+  const { name, description } = req.body;
+  const userId = req.user.id;
 
+  const query  = await getDb().query(`
+    INSERT INTO subreddit VALUES (DEFAULT, '${name}', '${description}')
+    RETURNING id;
+  `).catch((err) => console.log(err));
 
+  const subId = query.rows[0].id;
+
+  var x = await getDb().query(`
+    INSERT INTO subreddit_user VALUES
+    (DEFAULT,${userId},${subId});
+  `);
+
+  var y = await getDb().query(`
+    INSERT INTO subreddit_moderator VALUES (DEFAULT, ${userId}, ${subId});
+  `).catch((err) => console.log(err));
+
+  return res.sendStatus(200);
+});
 
 router.get("/subreddits", async (req, res) => {
   const user = req.user;

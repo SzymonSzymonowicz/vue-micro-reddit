@@ -10,7 +10,10 @@
         <a to="/" v-if="isIn === 'false'" class="btn btn-primary" @click="join"
           >Dołącz</a
         >
-        <router-link :to="{ path: `/r/${name}` }" class="btn btn-secondary"
+        <router-link
+          v-if="!hideStepInto"
+          :to="{ path: `/r/${name}` }"
+          class="btn btn-secondary"
           >Przeglądaj</router-link
         >
       </div>
@@ -35,6 +38,7 @@ export default {
     description: String,
     isIn: String,
     isModerator: Boolean,
+    hideStepInto: Boolean,
   },
   methods: {
     async join() {

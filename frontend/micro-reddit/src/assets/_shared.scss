@@ -26,6 +26,11 @@ $lightgray: #b6b7b8;
     input {
       text-align: center;
     }
+    textarea {
+      width: 200%;
+      align-self: center;
+      min-height: 120px;
+    }
   }
 }
 

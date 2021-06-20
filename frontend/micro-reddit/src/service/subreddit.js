@@ -42,10 +42,30 @@ const isLoggedUserInSubreddit = (name) =>
     })
     .catch((err) => console.log(err));
 
+const postSubreddit = (name, description) =>
+  axios
+    .post(
+      `${basePath}/subreddits`,
+      { name: name, description: description },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch((err) => console.log(err));
+
+const checkUniqueSubredditName = (name) =>
+  axios
+    .get(`${basePath}/subreddits/unique?name=${name}`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
 export {
   joinSubreddit,
   getSubredditByName,
   getSubredditPostsByName,
   isSubredditModerator,
   isLoggedUserInSubreddit,
+  postSubreddit,
+  checkUniqueSubredditName,
 };

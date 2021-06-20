@@ -7,6 +7,7 @@
       :description="info.description"
       :isIn="info.isIn"
       :isModerator="isModerator"
+      :hideStepInto="true"
       @updateParent="getIsIn"
     />
     <span>info: {{ info }}</span>
