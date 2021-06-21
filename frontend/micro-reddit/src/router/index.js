@@ -65,6 +65,14 @@ const routes = [
     },
     component: () => import("../components/EditSubreddit.vue"),
   },
+  {
+    path: "/search",
+    name: "Search",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/Search.vue"),
+  },
 ];
 
 const router = createRouter({

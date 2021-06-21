@@ -27,6 +27,31 @@ router.get("/posts/my", async (req, res) => {
   return res.send(ret.rows);
 });
 
+router.get("/posts/search", async (req, res) => {
+  const content = req.query.content;
+
+  const ret = await getDb().query(`
+    SELECT p.id,
+    s."name" as "subreddit",
+    ru.nickname as "author",
+    p.title,
+    p."content",
+    p.creation_date as "creationDate",
+    p.image_path as "imagePath",
+    p.video_url as "videoUrl"
+    FROM post p 
+      INNER JOIN subreddit s
+      INNER JOIN subreddit_user su ON su.subreddit_id = s.id
+      ON p.subreddit_id = s.id
+      INNER JOIN reddit_user ru ON ru.id = p.user_id
+    WHERE p.content LIKE '%${content}%';
+  `);
+  return res.send(ret.rows);
+});
+
+
+
+
 router.get("/posts/:id/votes", async (req, res) => {
   const user = req.user;
   const postId = req.params.id;

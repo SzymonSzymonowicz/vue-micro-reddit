@@ -11,6 +11,9 @@
         <div class="item">
           <router-link to="/new-subreddit">Nowy subreddit</router-link>
         </div>
+        <div class="item">
+          <router-link to="/search"><i class="bi bi-search"></i></router-link>
+        </div>
       </div>
 
       <!-- //subreddits -->

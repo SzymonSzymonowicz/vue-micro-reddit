@@ -23,6 +23,31 @@ router.get("/subreddits/:name/posts", async (req, res) => {
   return res.send(ret.rows);
 });
 
+// SELECT * FROM subreddit s WHERE s."name" LIKE '%th%';
+router.get("/subreddits/search", async (req, res) => {
+  const user = req.user;
+  const name = req.query.name;
+
+  const ret = await getDb().query(`
+    SELECT s.id, s.name, s.description,
+    CASE
+      WHEN res.id IS NOT NULL THEN true::text
+    ELSE false::text
+      END "isIn"
+    FROM subreddit s LEFT JOIN (
+      SELECT s.id
+      FROM subreddit s INNER JOIN subreddit_user su
+      ON s.id = su.subreddit_id
+      WHERE su.user_id = ${user.id}
+    ) as res
+    ON s.id = res.id
+    WHERE s."name" LIKE '%${name}%';
+    ;
+  `);
+
+  return res.send(ret.rows);
+});
+
 router.get("/subreddits/unique", async (req, res) => {
   let name = req.query.name;
 

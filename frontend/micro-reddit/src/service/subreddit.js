@@ -71,6 +71,13 @@ const checkUniqueSubredditName = (name) =>
     })
     .catch((err) => console.log(err));
 
+const searchSubredditsByName = (name) =>
+  axios
+    .get(`${basePath}/subreddits/search?name=${name}`, {
+      withCredentials: true,
+    })
+    .catch((err) => console.log(err));
+
 export {
   joinSubreddit,
   getSubredditByName,
@@ -80,4 +87,5 @@ export {
   postSubreddit,
   checkUniqueSubredditName,
   putSubreddit,
+  searchSubredditsByName,
 };
