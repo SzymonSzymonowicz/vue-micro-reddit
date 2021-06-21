@@ -35,6 +35,13 @@ const voteForPost = (id, vote) =>
     )
     .catch(logError);
 
+const searchPostsByContent = (content) =>
+  axios
+    .get(`${basePath}/posts/search?content=${content}`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
 const parsePosts = (posts) => {
   const regex = /watch\?v=/;
 
@@ -54,4 +61,5 @@ export {
   hasUserVotedAlready,
   voteForPost,
   parsePosts,
+  searchPostsByContent,
 };

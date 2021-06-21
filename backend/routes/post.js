@@ -41,10 +41,9 @@ router.get("/posts/search", async (req, res) => {
     p.video_url as "videoUrl"
     FROM post p 
       INNER JOIN subreddit s
-      INNER JOIN subreddit_user su ON su.subreddit_id = s.id
       ON p.subreddit_id = s.id
       INNER JOIN reddit_user ru ON ru.id = p.user_id
-    WHERE p.content LIKE '%${content}%';
+    WHERE p.content ILIKE '%${content}%';
   `);
   return res.send(ret.rows);
 });

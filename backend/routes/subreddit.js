@@ -41,7 +41,7 @@ router.get("/subreddits/search", async (req, res) => {
       WHERE su.user_id = ${user.id}
     ) as res
     ON s.id = res.id
-    WHERE s."name" LIKE '%${name}%';
+    WHERE s."name" ILIKE '%${name}%';
     ;
   `);
 
