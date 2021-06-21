@@ -10,7 +10,11 @@
       :hideStepInto="true"
       @updateParent="getIsIn"
     />
-    <PostForm :subredditId="info.id" />
+    <PostForm
+      @getSubredditPosts="getSubredditPosts"
+      v-if="info.isIn === 'true'"
+      :subredditId="info.id"
+    />
     <div class="contentWrapper alignCenter">
       <Post v-for="post in posts" :key="post.id" :post="post" />
     </div>

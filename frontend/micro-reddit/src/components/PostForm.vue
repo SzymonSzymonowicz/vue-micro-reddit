@@ -28,7 +28,6 @@
 
 <script>
 import axios from "axios";
-// import router from '../router';
 import { newPost } from "../service/post";
 
 export default {
@@ -82,6 +81,7 @@ export default {
       if (req.status === 200) {
         console.log("sukces");
         // router.go(-1);
+        this.$emit("getSubredditPosts");
       }
     },
   },
@@ -90,6 +90,7 @@ export default {
 
 <style lang="scss" scoped>
 form {
+  align-self: center;
   min-width: 200px;
   width: 25%;
   .field {

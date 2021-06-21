@@ -31,7 +31,7 @@
     <div class="image" v-if="post.imagePath">
       <img :src="post.imagePath" />
     </div>
-    <div class="content">{{ post.content }}</div>
+    <div class="content"><span v-html="post.content"></span></div>
     <div class="video" v-if="post.videoUrl">
       <iframe width="640" height="360" :src="post.videoUrl" />
     </div>
