@@ -74,10 +74,12 @@ router.get("/posts/:id/comments", async (req, res) => {
   const postId = req.params.id;
 
   const ret = await getDb().query(`
-    SELECT c.*
+    SELECT c.id, c.content, ru.nickname as "author", c.post_id as "postId"
     FROM "comment" c
     INNER JOIN post p
     ON c.post_id = p.id
+    INNER JOIN reddit_user ru
+    ON c.user_id = ru.id
     WHERE p.id = ${postId};
   `);
 

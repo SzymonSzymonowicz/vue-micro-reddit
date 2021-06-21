@@ -1,12 +1,20 @@
 <template>
-  <!-- <span>fsda</span> -->
-  <div>
+  <div class="w-100 d-flex flex-column align-items-center">
     <Post :post="post" />
-    <ol>
-      <li v-for="com in comments" :key="com.id">
-        {{ com }}
-      </li>
-    </ol>
+    <div class="comments">
+      <div v-for="com in comments" :key="com.id">
+        <div class="card" style="min-width: 100%">
+          <div class="card-body">
+            <h5 class="card-title">{{ com.author }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"># {{ com.id }}</h6>
+            <p class="card-text">
+              {{ com.content }}
+            </p>
+            <button class="btn btn-danger text-right">Usuń</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -49,4 +57,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.comments {
+  width: 80%;
+}
+</style>
