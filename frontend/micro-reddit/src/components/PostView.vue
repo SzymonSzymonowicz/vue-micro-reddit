@@ -69,7 +69,7 @@ export default {
       const req = await deleteCommentById(id);
       if (req.status === 200) {
         await this.getPostComments();
-        this.socket.emit("SEND_MESSAGE", {
+        this.socket.emit("COMMENTS_UPDATED", {
           user: "default",
           message: "default",
         });

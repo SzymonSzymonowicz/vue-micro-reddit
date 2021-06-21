@@ -33,7 +33,7 @@ export default {
       let req = await postComment(this.postId, this.content);
       if (req.status === 200) {
         console.log("sukces");
-        this.socket.emit("SEND_MESSAGE", {
+        this.socket.emit("COMMENTS_UPDATED", {
           user: "default",
           message: "default",
         });
