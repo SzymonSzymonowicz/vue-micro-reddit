@@ -3,6 +3,17 @@ import axios from "axios";
 const basePath = "http://localhost:5000/api";
 const logError = (err) => console.log(err);
 
+const newPost = (title, content, imagePath, videoUrl, subredditId) =>
+  axios
+    .post(
+      `${basePath}/posts`,
+      { title, content, imagePath, videoUrl, subredditId },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch(logError);
+
 const getMyPosts = (sortBy) =>
   axios
     .get(`${basePath}/posts/my?sortBy=${sortBy ? sortBy : ""}`, {
@@ -62,4 +73,5 @@ export {
   voteForPost,
   parsePosts,
   searchPostsByContent,
+  newPost,
 };

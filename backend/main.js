@@ -40,6 +40,7 @@ app.use(function (err, req, res, next) {
   }
 })
 
+// Exposing static images
 app.use("/static", express.static(__dirname + "/uploads/"))
 
 // CORS
@@ -131,10 +132,8 @@ app.post("/api/login", passport.authenticate("local"), (req, res) => {
 });
 
 app.post("/api/upload", upload.single('file'), (req, res) => {
-  res.json({ file: req.file });
+  res.json({ file: req.file.filename });
 })
-
-
 
 const apiPrefix = "/api";
 

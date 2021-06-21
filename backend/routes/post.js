@@ -108,4 +108,30 @@ router.get("/posts/:id/has-voted", async (req, res) => {
   return res.send(hasVoted);
 })
 
+// { title, content, imagePath, videoUrl, subredditId }
+router.post("/posts", async (req, res) => {
+  const userId = req.user.id;
+  const { title, content, imagePath, videoUrl, subredditId } = req.body;
+
+  console.log("==================================")
+  console.log(req.body);
+  console.log("==================================")
+
+  const insertPost = await getDb().query(`
+    INSERT INTO post VALUES
+    (
+      DEFAULT,
+      '${title}',
+      '${content}', 
+      '${imagePath}', 
+      '${videoUrl}', 
+      NOW(),
+      ${subredditId}, 
+      ${userId}
+    );
+  `);
+
+  return res.sendStatus(200);
+})
+
 module.exports = router;

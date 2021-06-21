@@ -10,7 +10,7 @@
       :hideStepInto="true"
       @updateParent="getIsIn"
     />
-    <PostForm />
+    <PostForm :subredditId="info.id" />
     <div class="contentWrapper alignCenter">
       <Post v-for="post in posts" :key="post.id" :post="post" />
     </div>

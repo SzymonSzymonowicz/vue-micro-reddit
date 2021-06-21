@@ -419,3 +419,5 @@ modules.xml
 # Sonarlint plugin
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,webstorm+all
+
+backend/uploads/*
