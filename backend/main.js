@@ -18,15 +18,14 @@ io.on('connection', function (socket) {
     socket.on('SEND_MESSAGE', function (data) {
       io.emit('MESSAGE', data);
     });
+    socket.on('DELETED_POST', function (data) {
+      io.emit('DELETED_POST', data);
+    });
 });
 
 server.listen(3000, () => {
     console.log('listening on *:8080');
 });
-
-
-
-
 
 // Multer
 var multer = require('multer');

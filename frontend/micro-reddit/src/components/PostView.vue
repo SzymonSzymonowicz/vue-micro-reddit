@@ -69,6 +69,10 @@ export default {
       const req = await deleteCommentById(id);
       if (req.status === 200) {
         await this.getPostComments();
+        this.socket.emit("SEND_MESSAGE", {
+          user: "default",
+          message: "default",
+        });
       }
     },
     async deletePost(event) {
@@ -78,6 +82,10 @@ export default {
       );
 
       if (req.status === 200) {
+        this.socket.emit("DELETED_POST", {
+          user: "default",
+          message: "default",
+        });
         router.go(-1);
       }
     },
@@ -87,6 +95,9 @@ export default {
     this.getPostComments();
     this.socket.on("MESSAGE", () => {
       this.getPostComments();
+    });
+    this.socket.on("DELETED_POST", () => {
+      router.go(-1);
     });
   },
 };
