@@ -48,8 +48,41 @@ router.get("/posts/search", async (req, res) => {
   return res.send(ret.rows);
 });
 
+router.get("/posts/:id", async (req, res) => {
+  const postId = req.params.id;
 
+  const ret = await getDb().query(`
+    SELECT p.id,
+    s."name" as "subreddit",
+    ru.nickname as "author",
+    p.title,
+    p."content",
+    p.creation_date as "creationDate",
+    p.image_path as "imagePath",
+    p.video_url as "videoUrl"
+    FROM post p 
+      INNER JOIN subreddit s
+      ON p.subreddit_id = s.id
+      INNER JOIN reddit_user ru ON ru.id = p.user_id
+    WHERE p.id = ${postId};
+  `);
 
+  return res.send(ret.rows[0]);
+});
+
+router.get("/posts/:id/comments", async (req, res) => {
+  const postId = req.params.id;
+
+  const ret = await getDb().query(`
+    SELECT c.*
+    FROM "comment" c
+    INNER JOIN post p
+    ON c.post_id = p.id
+    WHERE p.id = ${postId};
+  `);
+
+  return res.send(ret.rows);
+});
 
 router.get("/posts/:id/votes", async (req, res) => {
   const user = req.user;
@@ -112,10 +145,6 @@ router.get("/posts/:id/has-voted", async (req, res) => {
 router.post("/posts", async (req, res) => {
   const userId = req.user.id;
   const { title, content, imagePath, videoUrl, subredditId } = req.body;
-
-  console.log("==================================")
-  console.log(req.body);
-  console.log("==================================")
 
   const insertPost = await getDb().query(`
     INSERT INTO post VALUES

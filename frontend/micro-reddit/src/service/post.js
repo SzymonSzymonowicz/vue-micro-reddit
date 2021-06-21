@@ -35,6 +35,20 @@ const hasUserVotedAlready = (id) =>
     })
     .catch(logError);
 
+const getPostById = (id) =>
+  axios
+    .get(`${basePath}/posts/${id}`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
+const getPostComments = (id) =>
+  axios
+    .get(`${basePath}/posts/${id}/comments`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
 const voteForPost = (id, vote) =>
   axios
     .post(
@@ -84,4 +98,6 @@ export {
   parsePosts,
   searchPostsByContent,
   newPost,
+  getPostById,
+  getPostComments,
 };

@@ -28,6 +28,9 @@
         {{ post.creationDate }}
       </div>
     </div>
+    <router-link class="w-100 btn btn-primary" :to="`/post/${post.id}`"
+      >Z komentarzami</router-link
+    >
     <div class="image" v-if="post.imagePath">
       <img :src="post.imagePath" />
     </div>

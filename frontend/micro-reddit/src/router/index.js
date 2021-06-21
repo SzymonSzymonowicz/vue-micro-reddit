@@ -73,6 +73,14 @@ const routes = [
     },
     component: () => import("../components/Search.vue"),
   },
+  {
+    path: "/post/:id",
+    name: "PostView",
+    meta: {
+      requiresAuth: true,
+    },
+    component: () => import("../components/PostView.vue"),
+  },
 ];
 
 const router = createRouter({
