@@ -13,12 +13,14 @@
 
 <script>
 import { postComment } from "../service/comment";
+import io from "socket.io-client";
 
 export default {
   name: "CommentForm",
   data() {
     return {
       content: "",
+      socket: io("localhost:3000"),
     };
   },
   props: {
@@ -31,6 +33,10 @@ export default {
       let req = await postComment(this.postId, this.content);
       if (req.status === 200) {
         console.log("sukces");
+        this.socket.emit("SEND_MESSAGE", {
+          user: "default",
+          message: "default",
+        });
         this.$emit("getPostComments");
       }
     },

@@ -2,6 +2,31 @@ const authenticationMiddleware = require("./middleware/authenticate");
 
 // Express.js
 const express = require("express");
+const app = express();
+
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = require('socket.io')(server, {
+  cors: {
+    origin: '*',
+  }
+});
+
+io.on('connection', function (socket) {
+    console.log(socket.id);
+    socket.on('SEND_MESSAGE', function (data) {
+      io.emit('MESSAGE', data);
+    });
+});
+
+server.listen(3000, () => {
+    console.log('listening on *:8080');
+});
+
+
+
+
 
 // Multer
 var multer = require('multer');
@@ -31,7 +56,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage, fileFilter });
 
-const app = express();
+
+
+
 app.use(express.json());
 app.use(function (err, req, res, next) {
   if(err.code === "FILETYPE_NOT_ALLOWED") {

@@ -33,6 +33,8 @@ import { deleteCommentById } from "../service/comment";
 import Post from "./Post.vue";
 import router from "../router";
 import CommentForm from "./CommentForm.vue";
+import io from "socket.io-client";
+
 // get all comments
 // get post
 // get is moderator
@@ -44,6 +46,7 @@ export default {
       id: this.$route.params.id,
       post: {},
       comments: [],
+      socket: io("localhost:3000"),
     };
   },
   methods: {
@@ -82,6 +85,9 @@ export default {
   mounted() {
     this.getCurrentPost();
     this.getPostComments();
+    this.socket.on("MESSAGE", () => {
+      this.getPostComments();
+    });
   },
 };
 </script>
