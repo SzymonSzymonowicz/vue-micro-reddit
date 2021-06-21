@@ -1,6 +1,10 @@
 <template>
   <div class="w-100 d-flex flex-column align-items-center">
-    <Post :post="post" />
+    <Post :post="post" :initShowDelete="true" />
+    <button class="w-75 btn btn-danger mt-2 mb-5" @click="deletePost">
+      Usuń
+    </button>
+    <CommentForm :postId="post.id" @getPostComments="getPostComments" />
     <div class="comments">
       <div v-for="com in comments" :key="com.id">
         <div class="card" style="min-width: 100%">
@@ -10,7 +14,12 @@
             <p class="card-text">
               {{ com.content }}
             </p>
-            <button class="btn btn-danger text-right">Usuń</button>
+            <button
+              @click="deleteComment(com.id)"
+              class="btn btn-danger text-right"
+            >
+              Usuń
+            </button>
           </div>
         </div>
       </div>
@@ -19,13 +28,16 @@
 </template>
 
 <script>
-import { getPostById, getPostComments } from "../service/post";
+import { getPostById, getPostComments, deletePostById } from "../service/post";
+import { deleteCommentById } from "../service/comment";
 import Post from "./Post.vue";
+import router from "../router";
+import CommentForm from "./CommentForm.vue";
 // get all comments
 // get post
 // get is moderator
 export default {
-  components: { Post },
+  components: { Post, CommentForm },
   name: "PostView",
   data() {
     return {
@@ -47,6 +59,23 @@ export default {
 
       if (req.status === 200) {
         this.comments = req.data;
+      }
+    },
+    async deleteComment(id) {
+      console.log(id);
+      const req = await deleteCommentById(id);
+      if (req.status === 200) {
+        await this.getPostComments();
+      }
+    },
+    async deletePost(event) {
+      event.preventDefault();
+      let req = await deletePostById(this.post.id).catch((err) =>
+        console.log(err)
+      );
+
+      if (req.status === 200) {
+        router.go(-1);
       }
     },
   },

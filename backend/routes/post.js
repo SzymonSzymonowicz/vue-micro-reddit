@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const getDb = require("../db").getDb;
 
@@ -97,7 +97,7 @@ router.get("/posts/:id/votes", async (req, res) => {
   `);
 
   return res.send(ret.rows[0].sum);
-})
+});
 
 router.post("/posts/:id/votes", async (req, res) => {
   const userId = req.user.id;
@@ -114,7 +114,7 @@ router.post("/posts/:id/votes", async (req, res) => {
   `);
 
   const hasVoted = hasVotedQuerry.rows[0].exists;
-  
+
   if (hasVoted) {
     return res.status(400).send("You have already voted on this post");
   }
@@ -123,7 +123,7 @@ router.post("/posts/:id/votes", async (req, res) => {
     INSERT INTO post_vote VALUES (DEFAULT, ${vote}, ${userId}, ${postId});
   `);
   return res.sendStatus(200);
-})
+});
 
 router.get("/posts/:id/has-voted", async (req, res) => {
   const userId = req.user.id;
@@ -141,7 +141,7 @@ router.get("/posts/:id/has-voted", async (req, res) => {
   const hasVoted = ret.rows[0].exists;
 
   return res.send(hasVoted);
-})
+});
 
 // { title, content, imagePath, videoUrl, subredditId }
 router.post("/posts", async (req, res) => {
@@ -163,6 +163,23 @@ router.post("/posts", async (req, res) => {
   `);
 
   return res.sendStatus(200);
-})
+});
+
+router.delete("/posts/:id", async (req, res) => {
+  await getDb().query(
+    `DELETE
+         FROM post_vote
+         WHERE post_id = '${req.params.id}'`
+  );
+
+  await getDb().query(`DELETE FROM comment WHERE post_id = '${req.params.id}'`);
+
+  await getDb().query(
+    `DELETE
+         FROM post
+         WHERE id = '${req.params.id}'`
+  );
+  return res.send();
+});
 
 module.exports = router;

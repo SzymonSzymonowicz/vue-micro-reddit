@@ -60,6 +60,11 @@ const voteForPost = (id, vote) =>
     )
     .catch(logError);
 
+const deletePostById = (id) =>
+  axios.delete(`${basePath}/posts/${id}`, {
+    withCredentials: true,
+  });
+
 const searchPostsByContent = (content) =>
   axios
     .get(`${basePath}/posts/search?content=${content}`, {
@@ -100,4 +105,5 @@ export {
   newPost,
   getPostById,
   getPostComments,
+  deletePostById,
 };

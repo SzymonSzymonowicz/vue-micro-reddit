@@ -54,6 +54,7 @@ export default {
     return {
       votes: 0,
       hasUserVoted: false,
+      showDelete: this.initShowDelete,
     };
   },
   methods: {
