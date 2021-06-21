@@ -2,8 +2,45 @@ const authenticationMiddleware = require("./middleware/authenticate");
 
 // Express.js
 const express = require("express");
+
+// Multer
+var multer = require('multer');
+var path = require("path");
+
+const fileFilter = function (req, file, cb) {
+  const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+
+  if (!allowedTypes.includes(file.mimetype)) {
+    const error = new Error("Wrong file type");
+    error.code = "FILETYPE_NOT_ALLOWED";
+    return cb(error, false);
+  }
+
+  cb(null, true);
+}
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    /*Appending extension with original name*/
+    cb(null, new Date().valueOf() + '_' + path.extname(file.originalname)) 
+  },
+})
+
+var upload = multer({ storage: storage, fileFilter });
+
 const app = express();
 app.use(express.json());
+app.use(function (err, req, res, next) {
+  if(err.code === "FILETYPE_NOT_ALLOWED") {
+    res.send(422).json({ error: "Only images are allowed" });
+    return;
+  }
+})
+
+app.use("/static", express.static(__dirname + "/uploads/"))
 
 // CORS
 const cors = require("cors");
@@ -92,6 +129,12 @@ app.post("/api/login", passport.authenticate("local"), (req, res) => {
   console.dir(req.user);
   res.send(req.user);
 });
+
+app.post("/api/upload", upload.single('file'), (req, res) => {
+  res.json({ file: req.file });
+})
+
+
 
 const apiPrefix = "/api";
 

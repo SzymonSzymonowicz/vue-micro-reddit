@@ -10,6 +10,7 @@
       :hideStepInto="true"
       @updateParent="getIsIn"
     />
+    <PostForm />
     <div class="contentWrapper alignCenter">
       <Post v-for="post in posts" :key="post.id" :post="post" />
     </div>
@@ -26,9 +27,10 @@ import {
 import { parsePosts } from "../service/post";
 import Post from "./Post.vue";
 import Subreddit from "./Subreddit.vue";
+import PostForm from "./PostForm.vue";
 
 export default {
-  components: { Subreddit, Post },
+  components: { Subreddit, Post, PostForm },
   name: "SubredditView",
   data() {
     return {
