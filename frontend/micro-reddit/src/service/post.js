@@ -23,14 +23,14 @@ const getMyPosts = (sortBy) =>
 
 const getPostVotesById = (id) =>
   axios
-    .get(`${basePath}/posts/${id}/votes`, {
+    .get(`${basePath}/posts/${id}/votes/sum`, {
       withCredentials: true,
     })
     .catch(logError);
 
 const hasUserVotedAlready = (id) =>
   axios
-    .get(`${basePath}/posts/${id}/has-voted`, {
+    .get(`${basePath}/posts/${id}/my-vote`, {
       withCredentials: true,
     })
     .catch(logError);

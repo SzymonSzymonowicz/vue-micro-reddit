@@ -4,12 +4,17 @@
       <div class="titleBar">
         <div class="title">{{ post.title }} # {{ post.id }}</div>
         <div class="vote">
-          <div>{{ votes }}</div>
-          <div v-if="!hasUserVoted">
-            <i @click="upVote" class="like bi bi-hand-thumbs-up-fill"></i>
+          <div class="votes">{{ votes }}</div>
+          <div>
+            <i
+              @click="upVote"
+              class="like bi bi-hand-thumbs-up-fill"
+              v-bind:class="voteClass('like')"
+            ></i>
             <i
               @click="downVote"
               class="dislike bi bi-hand-thumbs-down-fill"
+              v-bind:class="voteClass('dislike')"
             ></i>
           </div>
         </div>
@@ -53,11 +58,25 @@ export default {
   data() {
     return {
       votes: 0,
-      hasUserVoted: false,
+      myVote: "none",
       showDelete: this.initShowDelete,
     };
   },
+  computed: {},
   methods: {
+    voteClass(type) {
+      if (this.myVote === "none") {
+        return "";
+      }
+
+      if (this.myVote === "upvote" && type === "like") {
+        return "liked";
+      } else if (this.myVote === "downvote" && type === "dislike") {
+        return "disliked";
+      } else {
+        return "";
+      }
+    },
     async getVotes() {
       let req = await getPostVotesById(this.post.id);
 
@@ -69,7 +88,7 @@ export default {
       let req = await hasUserVotedAlready(this.post.id);
 
       if (req.status === 200) {
-        this.hasUserVoted = req.data;
+        this.myVote = req.data;
       }
     },
     async upVote() {
@@ -142,17 +161,37 @@ export default {
 }
 
 .like {
-  color: limegreen;
+  color: gray;
   &:hover {
-    color: green;
+    color: limegreen;
     transition: 0.5s ease-out;
+    cursor: pointer;
   }
 }
 .dislike {
+  color: gray;
+  &:hover {
+    color: red;
+    transition: 0.5s ease-out;
+    cursor: pointer;
+  }
+}
+
+.liked {
+  color: limegreen;
+  &:hover {
+    cursor: default;
+  }
+}
+
+.disliked {
   color: red;
   &:hover {
-    color: rgb(165, 8, 8);
-    transition: 0.5s ease-out;
+    cursor: default;
   }
+}
+
+.votes {
+  margin-right: 5px;
 }
 </style>

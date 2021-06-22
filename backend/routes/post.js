@@ -86,7 +86,7 @@ router.get("/posts/:id/comments", async (req, res) => {
   return res.send(ret.rows);
 });
 
-router.get("/posts/:id/votes", async (req, res) => {
+router.get("/posts/:id/votes/sum", async (req, res) => {
   const user = req.user;
   const postId = req.params.id;
 
@@ -125,22 +125,31 @@ router.post("/posts/:id/votes", async (req, res) => {
   return res.sendStatus(200);
 });
 
-router.get("/posts/:id/has-voted", async (req, res) => {
+router.get("/posts/:id/my-vote", async (req, res) => {
   const userId = req.user.id;
   const postId = req.params.id;
 
   const ret = await getDb().query(`
-    SELECT EXISTS(
-      SELECT *
-      FROM post_vote pv
-      WHERE pv.post_id=${postId} 
-        AND pv.user_id=${userId}
-    );
+    SELECT vote
+    FROM post_vote
+    WHERE post_id=${postId} 
+      AND user_id=${userId};
   `);
 
-  const hasVoted = ret.rows[0].exists;
+  const hasVoted = ret.rows[0];
+  console.log("hasVoted: " + hasVoted);
 
-  return res.send(hasVoted);
+  if (!hasVoted) {
+    return res.send("none");
+  }
+  
+  const vote = hasVoted.vote;
+  
+  if (vote === 1) {
+    return res.send("upvote");
+  } else {
+    return res.send("downvote");
+  }
 });
 
 // { title, content, imagePath, videoUrl, subredditId }

@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
     <div id="nav">
+      <div class="item">
+        <span id="logo">Micro-Reddit</span>
+      </div>
       <div class="nav" v-if="showLogoutAction">
         <div class="item">
           <router-link to="/home">Home</router-link>
@@ -62,7 +65,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      showLogoutAction: false,
+      showLogoutAction: localStorage.getItem("isAuthenticated"),
     };
   },
   methods: {
@@ -125,5 +128,12 @@ export default {
   a.router-link-exact-active {
     color: black;
   }
+}
+
+#logo {
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 5px;
 }
 </style>
