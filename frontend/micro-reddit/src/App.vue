@@ -62,7 +62,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      showLogoutAction: true,
+      showLogoutAction: false,
     };
   },
   methods: {

@@ -4,6 +4,7 @@ const authenticationMiddleware = require("./middleware/authenticate");
 const express = require("express");
 const app = express();
 
+// Socket.io
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
