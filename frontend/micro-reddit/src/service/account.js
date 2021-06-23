@@ -1,6 +1,7 @@
 import axios from "axios";
+// axios.defaults.withCredentials = true;
 
-const basePath = "http://localhost:5000/api";
+const basePath = "/api";
 const logError = (err) => console.log(err);
 
 const checkUniqueEmail = (email) =>
@@ -10,14 +11,22 @@ const checkUniqueEmail = (email) =>
     })
     .catch(logError);
 
+const registerAccount = (user) =>
+  axios.post(`${basePath}/register`, user).catch(logError);
+
 const login = (user) =>
   axios.post(`${basePath}/login`, user, {
     withCredentials: true,
   });
 
-const updateAccount = (user) =>
-  axios.put("http://localhost:5000/api/account", user, {
+const getAccount = () =>
+  axios.get(`${basePath}/account`, {
     withCredentials: true,
   });
 
-export { checkUniqueEmail, login, updateAccount };
+const updateAccount = (user) =>
+  axios.put("/api/account", user, {
+    withCredentials: true,
+  });
+
+export { checkUniqueEmail, registerAccount, login, updateAccount, getAccount };

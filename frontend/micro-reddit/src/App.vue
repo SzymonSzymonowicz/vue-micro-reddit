@@ -74,7 +74,7 @@ export default {
     },
     logout: async function logout() {
       const result = await axios.post(
-        "http://localhost:5000/api/logout",
+        "/api/logout",
         {},
         {
           withCredentials: true,

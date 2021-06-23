@@ -13,9 +13,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { getAllSubreddits } from "../service/subreddit";
 import Subreddit from "./Subreddit.vue";
-// axios.defaults.withCredentials = true;
 
 export default {
   components: { Subreddit },
@@ -27,21 +26,12 @@ export default {
   },
   methods: {
     async getSubreddits() {
-      const result = await axios.get("http://localhost:5000/api/subreddits", {
-        withCredentials: true,
-      });
+      const result = await getAllSubreddits();
       this.subreddits = result.data;
     },
   },
   async mounted() {
     await this.getSubreddits();
-
-    // const result = await fetch("http://localhost:5000/api/subreddit", {
-    //   method: "POST",
-    //   credentials: "include",
-    // }).catch((err) => err);
-    // const data = await result.json();
-    // this.subreddits = data;
   },
 };
 </script>

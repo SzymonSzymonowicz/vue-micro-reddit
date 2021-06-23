@@ -27,8 +27,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import { newPost } from "../service/post";
+import { newPost, uploadImage } from "../service/post";
 
 export default {
   name: "PostForm",
@@ -53,13 +52,7 @@ export default {
       formData.append("file", this.file);
 
       try {
-        const file = await axios.post(
-          "http://localhost:5000/api/upload",
-          formData,
-          {
-            withCredentials: true,
-          }
-        );
+        const file = await uploadImage(formData);
         console.log(file.data.file);
         return file.data.file;
       } catch (err) {
@@ -68,7 +61,7 @@ export default {
     },
     async creatPost() {
       const img = await this.sendFile();
-      const imgUrl = "http://localhost:5000/static/" + img;
+      const imgUrl = "/static/" + img;
       this.imagePath = imgUrl;
 
       let req = await newPost(
@@ -79,7 +72,7 @@ export default {
         this.subredditId
       );
       if (req.status === 200) {
-        console.log("sukces");
+        console.log("Successfuly added new post.");
         // router.go(-1);
         this.$emit("getSubredditPosts");
       }

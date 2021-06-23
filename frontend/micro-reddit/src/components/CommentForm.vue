@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       content: "",
-      socket: io("localhost:5000"),
+      socket: io(""),
     };
   },
   props: {
@@ -31,6 +31,7 @@ export default {
       console.log(this.postId);
 
       let req = await postComment(this.postId, this.content);
+
       if (req.status === 200) {
         console.log("sukces");
         this.socket.emit("COMMENTS_UPDATED", {

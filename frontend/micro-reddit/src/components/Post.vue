@@ -33,9 +33,6 @@
         {{ post.creationDate }}
       </div>
     </div>
-    <router-link class="w-100 btn btn-primary" :to="`/post/${post.id}`"
-      >Z komentarzami</router-link
-    >
     <div class="image" v-if="post.imagePath">
       <img :src="post.imagePath" />
     </div>
@@ -43,6 +40,9 @@
     <div class="video" v-if="post.videoUrl">
       <iframe width="640" height="360" :src="post.videoUrl" />
     </div>
+    <router-link class="w-100 btn btn-primary mt-2" :to="`/post/${post.id}`"
+      >Komentarze</router-link
+    >
   </div>
 </template>
 
@@ -50,6 +50,7 @@
 import {
   getPostVotesById,
   hasUserVotedAlready,
+  // parsePosts,
   voteForPost,
 } from "../service/post";
 
@@ -109,12 +110,16 @@ export default {
     },
   },
   async mounted() {
+    console.log("Called");
     await this.getVotes();
     await this.hasVoted();
   },
   props: {
     post: {},
   },
+  // mounted() {
+  //   parsePost
+  // }
 };
 </script>
 

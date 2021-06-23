@@ -4,10 +4,9 @@
     <button class="w-75 btn btn-danger mt-2 mb-5" @click="deletePost">
       Usuń
     </button>
-    <CommentForm :postId="post.id" @getPostComments="getPostComments" />
     <div class="comments">
       <div v-for="com in comments" :key="com.id">
-        <div class="card" style="min-width: 100%">
+        <div class="card my-2" style="min-width: 100%">
           <div class="card-body">
             <h5 class="card-title">{{ com.author }}</h5>
             <h6 class="card-subtitle mb-2 text-muted"># {{ com.id }}</h6>
@@ -24,6 +23,7 @@
         </div>
       </div>
     </div>
+    <CommentForm :postId="post.id" @getPostComments="getPostComments" />
   </div>
 </template>
 
@@ -35,9 +35,6 @@ import router from "../router";
 import CommentForm from "./CommentForm.vue";
 import io from "socket.io-client";
 
-// get all comments
-// get post
-// get is moderator
 export default {
   components: { Post, CommentForm },
   name: "PostView",
@@ -46,7 +43,7 @@ export default {
       id: this.$route.params.id,
       post: {},
       comments: [],
-      socket: io("localhost:5000"),
+      socket: io(""),
     };
   },
   methods: {

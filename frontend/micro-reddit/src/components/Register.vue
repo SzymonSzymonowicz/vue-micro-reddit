@@ -24,10 +24,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import router from "../router";
 import { isValidEmail, isErrorObjectNotEmpty } from "@/utils/validationUtils";
-import { checkUniqueEmail } from "@/service/account";
+import { checkUniqueEmail, registerAccount } from "@/service/account";
 
 export default {
   data() {
@@ -87,9 +86,7 @@ export default {
         return;
       }
 
-      let res = await axios
-        .post("http://localhost:5000/api/register", this.user)
-        .catch((err) => err);
+      const res = await registerAccount(this.user);
 
       if (res.status === 200) {
         router.push("/");

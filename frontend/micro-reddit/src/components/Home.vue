@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <button @click="sortById" class="btn btn-primary mt-3">
+    <button @click="sortById" class="btn btn-primary my-3 w-80">
       Sortuj po NEW
     </button>
     <Post v-for="post in posts" :key="post.id" :post="post" />

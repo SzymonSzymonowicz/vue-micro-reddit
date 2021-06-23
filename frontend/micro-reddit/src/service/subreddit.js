@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const basePath = "http://localhost:5000/api";
+const basePath = "/api";
 const logError = (err) => console.log(err);
 
 const joinSubreddit = (subredditId) =>
@@ -20,6 +20,11 @@ const getSubredditByName = (name) =>
       withCredentials: true,
     })
     .catch((err) => console.log(err));
+
+const getAllSubreddits = () =>
+  axios.get(`${basePath}/subreddits`, {
+    withCredentials: true,
+  });
 
 const getSubredditPostsByName = (name) =>
   axios
@@ -81,6 +86,7 @@ const searchSubredditsByName = (name) =>
 export {
   joinSubreddit,
   getSubredditByName,
+  getAllSubreddits,
   getSubredditPostsByName,
   isSubredditModerator,
   isLoggedUserInSubreddit,

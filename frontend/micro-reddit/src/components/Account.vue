@@ -22,9 +22,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { isErrorObjectNotEmpty } from "@/utils/validationUtils";
-import { updateAccount } from "@/service/account";
+import { getAccount, updateAccount } from "@/service/account";
 
 export default {
   name: "Account",
@@ -40,9 +39,7 @@ export default {
     };
   },
   async mounted() {
-    const result = await axios.get("http://localhost:5000/api/account", {
-      withCredentials: true,
-    });
+    const result = await getAccount().catch((err) => console.log(err));
 
     const { nickname } = result.data;
 
@@ -76,7 +73,7 @@ export default {
         return;
       }
 
-      let res = await updateAccount(this.user).catch((err) => err);
+      let res = await updateAccount(this.user).catch((err) => console.log(err));
 
       if (res.status === 200) {
         this.message = "Pomyślna edycja";

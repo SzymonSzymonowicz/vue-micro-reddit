@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const basePath = "http://localhost:5000/api";
+const basePath = "/api";
 const logError = (err) => console.log(err);
 
 const deleteCommentById = (id) =>

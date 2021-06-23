@@ -4,6 +4,9 @@ const authenticationMiddleware = require("./middleware/authenticate");
 const express = require("express");
 const app = express();
 
+// Frontend static production build
+app.use("", express.static("../frontend/micro-reddit/dist"));
+
 // Socket.io
 const http = require('http');
 const server = http.createServer(app);
