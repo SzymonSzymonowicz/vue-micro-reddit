@@ -24,10 +24,6 @@ io.on('connection', function (socket) {
     });
 });
 
-server.listen(3000, () => {
-    console.log('listening on *:8080');
-});
-
 // Multer
 var multer = require('multer');
 var path = require("path");
@@ -55,9 +51,6 @@ var storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage, fileFilter });
-
-
-
 
 app.use(express.json());
 app.use(function (err, req, res, next) {
@@ -187,8 +180,7 @@ initDb(function (err) {
 
   const port = process.env.PORT || 5000;
 
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`API server listening at http://localhost:${port}`);
   });
 })
-

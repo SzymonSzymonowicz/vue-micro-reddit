@@ -20,7 +20,7 @@ export default {
   data() {
     return {
       content: "",
-      socket: io("localhost:3000"),
+      socket: io("localhost:5000"),
     };
   },
   props: {

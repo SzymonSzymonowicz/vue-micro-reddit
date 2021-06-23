@@ -46,7 +46,7 @@ export default {
       id: this.$route.params.id,
       post: {},
       comments: [],
-      socket: io("localhost:3000"),
+      socket: io("localhost:5000"),
     };
   },
   methods: {
