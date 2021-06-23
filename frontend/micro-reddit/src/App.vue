@@ -60,7 +60,7 @@ body,
 </style>
 
 <script>
-import axios from "axios";
+import { logoutUser } from "./service/account";
 
 export default {
   data() {
@@ -73,15 +73,9 @@ export default {
       this.showLogoutAction = localStorage.getItem("isAuthenticated");
     },
     logout: async function logout() {
-      const result = await axios.post(
-        "/api/logout",
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (result.status === 200) {
+      const result = await logoutUser();
+      const status = result.status;
+      if (status === 200 || status === 401) {
         console.log("Logging out");
 
         // clear localStorage

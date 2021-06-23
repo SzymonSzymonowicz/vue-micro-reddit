@@ -19,6 +19,9 @@ const login = (user) =>
     withCredentials: true,
   });
 
+const logoutUser = () =>
+  axios.post(`${basePath}/logout`, {}, { withCredentials: true });
+
 const getAccount = () =>
   axios.get(`${basePath}/account`, {
     withCredentials: true,
@@ -29,4 +32,11 @@ const updateAccount = (user) =>
     withCredentials: true,
   });
 
-export { checkUniqueEmail, registerAccount, login, updateAccount, getAccount };
+export {
+  checkUniqueEmail,
+  registerAccount,
+  login,
+  logoutUser,
+  updateAccount,
+  getAccount,
+};
