@@ -3,11 +3,13 @@
     <div class="field">
       <label for="title" class="label">Tytuł</label>
       <input v-model="title" name="title" />
+      <span class="errorMsg">{{ msg.title }}</span>
     </div>
 
     <div class="field">
-      <label for="content" class="label">Zawartość</label>
+      <label for="content" class="label">Opis</label>
       <textarea v-model="content" name="content" />
+      <span class="errorMsg">{{ msg.content }}</span>
     </div>
 
     <div class="field">
@@ -28,6 +30,7 @@
 
 <script>
 import { newPost, uploadImage } from "../service/post";
+import { isErrorObjectNotEmpty } from "@/utils/validationUtils";
 
 export default {
   name: "PostForm",
@@ -38,12 +41,29 @@ export default {
       content: "",
       imagePath: "",
       videoUrl: "",
+      msg: {},
+      touched: false,
     };
   },
   props: {
     subredditId: Number,
   },
+  watch: {
+    title(value) {
+      this.touchedByUser();
+      this.title = value;
+      this.msg["title"] = value === "" ? "Wypełnij to pole" : "";
+    },
+    content(value) {
+      this.touchedByUser();
+      this.content = value;
+      this.msg["content"] = value === "" ? "Wypełnij to pole" : "";
+    },
+  },
   methods: {
+    touchedByUser() {
+      this.touched = true;
+    },
     selectFile() {
       this.file = this.$refs.file.files[0];
     },
@@ -60,6 +80,16 @@ export default {
       }
     },
     async creatPost() {
+      if (!this.touched) {
+        alert("Nie wypełniono formularza.");
+        return;
+      }
+
+      if (isErrorObjectNotEmpty(this.msg)) {
+        console.log("Validation failed!");
+        return;
+      }
+
       const img = await this.sendFile();
       const imgUrl = "/static/" + img;
       this.imagePath = imgUrl;
@@ -85,7 +115,7 @@ export default {
 form {
   align-self: center;
   min-width: 200px;
-  width: 25%;
+  width: 50%;
   .field {
     display: flex;
     flex-direction: column;
