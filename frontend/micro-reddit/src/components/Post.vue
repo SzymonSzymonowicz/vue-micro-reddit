@@ -33,7 +33,7 @@
         {{ post.creationDate }}
       </div>
     </div>
-    <div class="image" v-if="post.imagePath">
+    <div class="image" v-if="post.imagePath && post.imagePath !== ''">
       <img :src="post.imagePath" />
     </div>
     <div class="content"><span v-html="post.content"></span></div>

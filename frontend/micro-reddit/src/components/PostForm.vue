@@ -90,9 +90,13 @@ export default {
         return;
       }
 
-      const img = await this.sendFile();
-      const imgUrl = "/static/" + img;
-      this.imagePath = imgUrl;
+      if (this.file) {
+        const img = await this.sendFile();
+        const imgUrl = "/static/" + img;
+        this.imagePath = imgUrl;
+      } else {
+        this.imagePath = "";
+      }
 
       let req = await newPost(
         this.title,

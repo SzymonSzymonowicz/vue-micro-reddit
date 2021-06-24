@@ -18,7 +18,8 @@ router.get("/subreddits/:name/posts", async (req, res) => {
     INNER JOIN subreddit s
       ON p.subreddit_id = s.id
       INNER JOIN reddit_user ru ON ru.id = p.user_id
-    WHERE s."name"='${subName}';  
+    WHERE s."name"='${subName}'
+    ORDER BY p.creation_date DESC;
   `);
   return res.send(ret.rows);
 });
