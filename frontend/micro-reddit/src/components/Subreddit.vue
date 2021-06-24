@@ -7,7 +7,7 @@
       </p>
       <p class="card-text">{{ description }}</p>
       <div class="actions">
-        <a to="/" v-if="isIn === 'false'" class="btn btn-primary" @click="join"
+        <a v-if="isIn === 'false'" class="btn btn-primary mx-2" @click="join"
           >Dołącz</a
         >
         <router-link

@@ -65,23 +65,29 @@ import { logoutUser } from "./service/account";
 export default {
   data() {
     return {
-      showLogoutAction: localStorage.getItem("isAuthenticated"),
+      showLogoutAction: sessionStorage.getItem("isAuthenticated"),
     };
   },
   methods: {
     showLogout() {
-      this.showLogoutAction = localStorage.getItem("isAuthenticated");
+      this.showLogoutAction = sessionStorage.getItem("isAuthenticated");
     },
     logout: async function logout() {
-      const result = await logoutUser();
+      const result = await logoutUser().catch(() => {
+        console.log("Session with backend got deleted.");
+        sessionStorage.removeItem("id");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("isAuthenticated");
+        this.showLogoutAction = false;
+      });
       const status = result.status;
       if (status === 200 || status === 401) {
         console.log("Logging out");
 
-        // clear localStorage
-        localStorage.removeItem("id");
-        localStorage.removeItem("email");
-        localStorage.removeItem("isAuthenticated");
+        // clear sessionStorage
+        sessionStorage.removeItem("id");
+        sessionStorage.removeItem("email");
+        sessionStorage.removeItem("isAuthenticated");
         this.showLogoutAction = false;
       }
     },

@@ -11,6 +11,8 @@ const dbConnectionData = {
   password: process.env.PG_PASSWORD,
 };
 
+console.log(dbConnectionData)
+
 // Postgres client setup
 const { Client } = require("pg");
 const client = new Client(dbConnectionData);

@@ -31,9 +31,9 @@ export default {
 
       if (result.status === 200) {
         const { id, email, isAuthenticated } = result.data;
-        localStorage.setItem("id", id);
-        localStorage.setItem("email", email);
-        localStorage.setItem("isAuthenticated", isAuthenticated);
+        sessionStorage.setItem("id", id);
+        sessionStorage.setItem("email", email);
+        sessionStorage.setItem("isAuthenticated", isAuthenticated);
 
         this.$emit("showLogout");
         router.push("/home");

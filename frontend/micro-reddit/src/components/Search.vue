@@ -2,7 +2,11 @@
   <div class="search">
     <div class="searchbar">
       <form @submit.prevent="searchSubreddits">
-        <input v-model="searchValue" placeholder="Wyszukaj" />
+        <input
+          v-model="searchValue"
+          v-on:change.capture="search"
+          placeholder="Wyszukaj"
+        />
         <select v-model="by">
           <option disabled value="">Wybierz opcję wyszukiwania</option>
           <option value="subTitle">Nazwa Subreddita</option>
@@ -12,7 +16,7 @@
       </form>
     </div>
     <div class="result">
-      <div v-if="by === 'subTitle'">
+      <div v-if="by === 'subTitle'" class="subs">
         <Subreddit
           v-for="sub in subreddits"
           :key="sub.id"
@@ -97,6 +101,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .subs {
+    width: 80%;
+  }
 }
 
 .searchbar form {

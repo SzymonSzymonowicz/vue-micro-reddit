@@ -116,12 +116,16 @@ router.post("/posts/:id/votes", async (req, res) => {
   const hasVoted = hasVotedQuerry.rows[0].exists;
 
   if (hasVoted) {
-    return res.status(400).send("You have already voted on this post");
+    // return res.status(400).send("You have already voted on this post");
+    await getDb().query(`
+      UPDATE post_vote SET vote=${vote} WHERE user_id=${userId} AND post_id=${postId};
+    `);
+  } else {
+    const insertQuerry = await getDb().query(`
+      INSERT INTO post_vote VALUES (DEFAULT, ${vote}, ${userId}, ${postId});
+    `);
   }
 
-  const insertQuerry = await getDb().query(`
-    INSERT INTO post_vote VALUES (DEFAULT, ${vote}, ${userId}, ${postId});
-  `);
   return res.sendStatus(200);
 });
 

@@ -184,4 +184,20 @@ router.post("/subreddits/:subId/join", async (req, res) => {
   return res.sendStatus(200);
 });
 
+router.post("/subreddits/:subId/leave", async (req, res) => {
+  const userId = req.user.id;
+  const subId = req.params.subId;
+
+  if (!(userId && subId)) {
+    return res.sendStatus(400);
+  }
+
+  const ret = await getDb().query(`
+    DELETE FROM subreddit_user WHERE
+    user_id=${userId} AND subreddit_id=${subId};
+  `);
+
+  return res.sendStatus(200);
+});
+
 module.exports = router;
