@@ -32,7 +32,12 @@
 </template>
 
 <script>
-import { getPostById, getPostComments, deletePostById } from "../service/post";
+import {
+  getPostById,
+  getPostComments,
+  deletePostById,
+  parseSinglePost,
+} from "../service/post";
 import { deleteCommentById } from "../service/comment";
 import Post from "./Post.vue";
 import router from "../router";
@@ -55,7 +60,7 @@ export default {
       const req = await getPostById(this.id);
 
       if (req.status === 200) {
-        this.post = req.data;
+        this.post = parseSinglePost(req.data);
       }
     },
     async getPostComments() {

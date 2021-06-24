@@ -31,7 +31,7 @@
 
 <script>
 import { searchSubredditsByName } from "../service/subreddit";
-import { searchPostsByContent } from "../service/post";
+import { searchPostsByContent, parsePosts } from "../service/post";
 import Subreddit from "./Subreddit.vue";
 import Post from "./Post.vue";
 
@@ -65,7 +65,7 @@ export default {
     },
     async searchPosts() {
       const req = await searchPostsByContent(this.searchValue);
-      this.posts = req.data;
+      this.posts = parsePosts(req.data);
     },
     search() {
       if (this.by === "subTitle") {

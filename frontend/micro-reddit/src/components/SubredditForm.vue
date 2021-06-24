@@ -5,7 +5,7 @@
       <input v-model="name" placeholder="Nazwa Subreddita" />
       <span class="errorMsg">{{ msg.name }}</span>
 
-      <textarea v-model="description" placeholder="Description" />
+      <textarea v-model="description" placeholder="Opis" />
       <span class="errorMsg">{{ msg.description }}</span>
 
       <button @click="createSubreddit" class="btn btn-primary">

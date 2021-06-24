@@ -78,27 +78,29 @@ const searchPostsByContent = (content) =>
     })
     .catch(logError);
 
-const parsePosts = (posts) => {
+const parseSinglePost = (post) => {
   const ytRegex = /watch\?v=/;
   const urlRegex =
     /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g;
 
-  return posts.map((post) => {
-    let { videoUrl, creationDate, content, ...rest } = post;
+  let { videoUrl, creationDate, content, ...rest } = post;
 
-    videoUrl = videoUrl?.replace(ytRegex, "embed/");
-    creationDate = new Date(creationDate).toLocaleString();
-    content = content
-      .split(urlRegex)
-      .map((text) =>
-        urlRegex.test(text)
-          ? `<a href="${text}" target="_blank">${text}</a>`
-          : text
-      )
-      .join("");
+  videoUrl = videoUrl?.replace(ytRegex, "embed/");
+  creationDate = new Date(creationDate).toLocaleString();
+  content = content
+    .split(urlRegex)
+    .map((text) =>
+      urlRegex.test(text)
+        ? `<a href="${text}" target="_blank">${text}</a>`
+        : text
+    )
+    .join("");
 
-    return { videoUrl, creationDate, content, ...rest };
-  });
+  return { videoUrl, creationDate, content, ...rest };
+};
+
+const parsePosts = (posts) => {
+  return posts.map(parseSinglePost);
 };
 
 export {
@@ -108,6 +110,7 @@ export {
   hasUserVotedAlready,
   voteForPost,
   parsePosts,
+  parseSinglePost,
   searchPostsByContent,
   newPost,
   getPostById,
