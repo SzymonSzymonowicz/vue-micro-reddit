@@ -21,14 +21,13 @@
 
 <script>
 import { postComment } from "../service/comment";
-import io from "socket.io-client";
 
 export default {
   name: "CommentForm",
+  inject: ["io"],
   data() {
     return {
       content: "",
-      socket: io(""),
     };
   },
   props: {
@@ -42,7 +41,7 @@ export default {
 
       if (req.status === 200) {
         console.log("sukces");
-        this.socket.emit("COMMENTS_UPDATED", {
+        this.io.emit("COMMENTS_UPDATED", {
           user: "default",
           message: "default",
         });

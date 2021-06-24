@@ -55,11 +55,12 @@ import {
   getPostVotesById,
   hasUserVotedAlready,
   // parsePosts,
-  voteForPost,
+  // voteForPost,
 } from "../service/post";
 
 export default {
   name: "Post",
+  inject: ["io"],
   data() {
     return {
       id: this.post.id || this.$route.params.id,
@@ -101,26 +102,34 @@ export default {
         this.myVote = req.data;
       }
     },
-    async upVote() {
-      let req = await voteForPost(this.id, 1);
-
-      if (req.status === 200) {
-        await this.hasVoted();
-        this.getVotes();
-      }
+    upVote() {
+      console.log(this.$io);
+      console.log("Fired");
+      this.io.emit("UPDATE_VOTES", {
+        postId: this.id,
+        vote: 1,
+        userId: localStorage.getItem("id"),
+      });
     },
-    async downVote() {
-      let req = await voteForPost(this.id, -1);
-
-      if (req.status === 200) {
-        await this.hasVoted();
-        this.getVotes();
-      }
+    downVote() {
+      this.io.emit("UPDATE_VOTES", {
+        postId: this.id,
+        vote: -1,
+        userId: localStorage.getItem("id"),
+      });
     },
   },
   async mounted() {
     await this.getVotes();
     await this.hasVoted();
+  },
+  created() {
+    this.io.on("MESSAGE_UPDATE_VOTES", (data) => {
+      console.log(data);
+      const { updatedSum } = data;
+
+      this.votes = updatedSum;
+    });
   },
   props: {
     post: { type: Object, required: true },

@@ -18,12 +18,47 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', function (socket) {
-    console.log(socket.id);
-    socket.on('COMMENTS_UPDATED', function (data) {
-      io.emit('MESSAGE', data);
-    });
-    socket.on('DELETED_POST', function (data) {
-      io.emit('DELETED_POST', data);
+  console.log("Established connection with: " + socket.id);
+  socket.on('COMMENTS_UPDATED', function (data) {
+    io.emit('MESSAGE', data);
+  });
+  socket.on('DELETED_POST', function (data) {
+    io.emit('DELETED_POST', data);
+  });
+  socket.on('UPDATE_VOTES', async function (data) {
+    const { postId, vote, userId } = data;
+    console.log(data);
+
+    const hasVotedQuerry = await getDb().query(`
+      SELECT EXISTS(
+        SELECT *
+        FROM post_vote pv
+        WHERE pv.post_id=${postId} 
+          AND pv.user_id=${userId}
+      );
+    `);
+  
+    const hasVoted = hasVotedQuerry.rows[0].exists;
+  
+    if (hasVoted) {
+      await getDb().query(`
+        UPDATE post_vote SET vote=${vote} WHERE user_id=${userId} AND post_id=${postId};
+      `);
+    } else {
+      await getDb().query(`
+        INSERT INTO post_vote VALUES (DEFAULT, ${vote}, ${userId}, ${postId});
+      `);
+    }
+
+    const ret = await getDb().query(`
+      SELECT COALESCE(SUM(pv.vote), 0) as sum
+      FROM post_vote pv
+      WHERE pv.post_id = ${postId};
+    `);
+
+    const updatedSum = ret.rows[0].sum;
+
+      io.emit('MESSAGE_UPDATE_VOTES', { updatedSum });
     });
 });
 

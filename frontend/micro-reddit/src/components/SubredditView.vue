@@ -36,6 +36,7 @@ import PostForm from "./PostForm.vue";
 export default {
   components: { Subreddit, Post, PostForm },
   name: "SubredditView",
+  inject: ["io"],
   data() {
     return {
       info: {},
@@ -78,6 +79,10 @@ export default {
     await this.getSubredditPosts();
     await this.getIsModerator();
     await this.getIsIn();
+
+    this.io.on("DELETED_POST", () => {
+      this.getSubredditPosts();
+    });
   },
 };
 </script>

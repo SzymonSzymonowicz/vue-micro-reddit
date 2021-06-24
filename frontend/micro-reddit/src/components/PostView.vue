@@ -48,18 +48,17 @@ import { deleteCommentById } from "../service/comment";
 import Post from "./Post.vue";
 import router from "../router";
 import CommentForm from "./CommentForm.vue";
-import io from "socket.io-client";
 
 export default {
   components: { Post, CommentForm },
   name: "PostView",
+  inject: ["io"],
   data() {
     return {
       id: this.$route.params.id,
       post: {},
       comments: [],
       doesUserModerate: undefined,
-      socket: io(""),
     };
   },
   methods: {
@@ -114,10 +113,10 @@ export default {
     this.getCurrentPost();
     this.getPostComments();
     await this.getIsModerated();
-    this.socket.on("MESSAGE", () => {
+    this.$io.on("MESSAGE", () => {
       this.getPostComments();
     });
-    this.socket.on("DELETED_POST", () => {
+    this.$io.on("DELETED_POST", () => {
       router.go(-1);
     });
   },
