@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <button @click="sortById" class="btn btn-primary my-3 w-80">
+  <div class="content">
+    <button @click="sortById" class="sort btn btn-primary my-3">
       Sortuj po NEW
     </button>
     <Post v-for="post in posts" :key="post.id" :post="post" />
@@ -51,10 +51,15 @@ export default {
 </script>
 
 <style lang="scss">
-.home {
+.content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  .sort {
+    width: 80%;
+  }
 }
 </style>

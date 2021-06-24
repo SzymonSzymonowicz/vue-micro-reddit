@@ -23,7 +23,11 @@
         </div>
       </div>
     </div>
-    <CommentForm :postId="post.id" @getPostComments="getPostComments" />
+    <CommentForm
+      class="commentForm"
+      :postId="post.id"
+      @getPostComments="getPostComments"
+    />
   </div>
 </template>
 
@@ -43,7 +47,7 @@ export default {
       id: this.$route.params.id,
       post: {},
       comments: [],
-      socket: io(""),
+      socket: io(process.env.VUE_APP_BACKEND_URL || ""),
     };
   },
   methods: {
@@ -101,7 +105,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.comments {
+.comments,
+.commentForm {
   width: 80%;
 }
 </style>

@@ -40,8 +40,12 @@
     <div class="video" v-if="post.videoUrl">
       <iframe width="640" height="360" :src="post.videoUrl" />
     </div>
-    <router-link class="w-100 btn btn-primary mt-2" :to="`/post/${post.id}`"
-      >Komentarze</router-link
+    <router-link
+      class="w-100 btn btn-primary mt-2"
+      v-if="showCommentsLink"
+      :to="`/post/${post.id}`"
+    >
+      Komentarze</router-link
     >
   </div>
 </template>
@@ -58,12 +62,17 @@ export default {
   name: "Post",
   data() {
     return {
+      id: this.post.id || this.$route.params.id,
       votes: 0,
       myVote: "none",
       showDelete: this.initShowDelete,
     };
   },
-  computed: {},
+  computed: {
+    showCommentsLink() {
+      return this.$route.path !== `/post/${this.post.id}`;
+    },
+  },
   methods: {
     voteClass(type) {
       if (this.myVote === "none") {
@@ -79,21 +88,21 @@ export default {
       }
     },
     async getVotes() {
-      let req = await getPostVotesById(this.post.id);
+      let req = await getPostVotesById(this.id);
 
       if (req.status === 200) {
         this.votes = req.data;
       }
     },
     async hasVoted() {
-      let req = await hasUserVotedAlready(this.post.id);
+      let req = await hasUserVotedAlready(this.id);
 
       if (req.status === 200) {
         this.myVote = req.data;
       }
     },
     async upVote() {
-      let req = await voteForPost(this.post.id, 1);
+      let req = await voteForPost(this.id, 1);
 
       if (req.status === 200) {
         await this.hasVoted();
@@ -101,7 +110,7 @@ export default {
       }
     },
     async downVote() {
-      let req = await voteForPost(this.post.id, -1);
+      let req = await voteForPost(this.id, -1);
 
       if (req.status === 200) {
         await this.hasVoted();
@@ -110,12 +119,11 @@ export default {
     },
   },
   async mounted() {
-    console.log("Called");
     await this.getVotes();
     await this.hasVoted();
   },
   props: {
-    post: {},
+    post: { type: Object, required: true },
   },
   // mounted() {
   //   parsePost

@@ -1,7 +1,8 @@
 import axios from "axios";
 // axios.defaults.withCredentials = true;
 
-const basePath = "/api";
+// const basePath = "/api";
+const basePath = process.env.VUE_APP_BACKEND_URL;
 const logError = (err) => console.log(err);
 
 const checkUniqueEmail = (email) =>

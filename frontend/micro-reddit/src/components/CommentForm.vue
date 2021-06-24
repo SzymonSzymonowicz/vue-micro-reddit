@@ -1,12 +1,20 @@
 <template>
   <form @submit.prevent>
-    <div class="field">
-      <label for="content" class="label">Treść</label>
-      <textarea v-model="content" name="content" />
-    </div>
-
-    <div class="field">
-      <button @click="addComment">Dodaj Komentarz</button>
+    <div class="card my-2" style="min-width: 100%">
+      <div class="card-body">
+        <h5 class="card-title">Nowy Komentarz</h5>
+        <div class="card-text">
+          <div class="field">
+            <label for="content" class="label">Treść</label>
+            <textarea v-model="content" name="content" class="form-control" />
+          </div>
+        </div>
+        <div class="field">
+          <button class="btn btn-primary my-4" @click="addComment">
+            Dodaj Komentarz
+          </button>
+        </div>
+      </div>
     </div>
   </form>
 </template>
@@ -20,7 +28,7 @@ export default {
   data() {
     return {
       content: "",
-      socket: io(""),
+      socket: io(process.env.VUE_APP_BACKEND_URL || ""),
     };
   },
   props: {
@@ -49,7 +57,7 @@ export default {
 form {
   align-self: center;
   min-width: 200px;
-  width: 25%;
+  width: 100%;
   .field {
     display: flex;
     flex-direction: column;
