@@ -14,7 +14,13 @@
 
     <div class="field">
       <label for="file" class="label">Dodaj zdjęcie</label>
-      <input type="file" name="file" ref="file" @change="selectFile" />
+      <input
+        type="file"
+        name="file"
+        ref="file"
+        @change="selectFile"
+        accept=".jpeg,.png"
+      />
     </div>
 
     <div class="field">
@@ -42,27 +48,24 @@ export default {
       imagePath: "",
       videoUrl: "",
       msg: {},
-      touched: false,
     };
   },
   props: {
     subredditId: Number,
   },
-  watch: {
-    title(value) {
-      this.touchedByUser();
-      this.title = value;
-      this.msg["title"] = value === "" ? "Wypełnij to pole" : "";
-    },
-    content(value) {
-      this.touchedByUser();
-      this.content = value;
-      this.msg["content"] = value === "" ? "Wypełnij to pole" : "";
-    },
-  },
   methods: {
-    touchedByUser() {
-      this.touched = true;
+    validate() {
+      this.msg["title"] = this.title === "" ? "Wypełnij to pole" : "";
+      this.msg["content"] = this.content === "" ? "Wypełnij to pole" : "";
+    },
+    resetForm() {
+      this.file = "";
+      this.title = "";
+      this.content = "";
+      this.imagePath = "";
+      this.videoUrl = "";
+      this.msg = {};
+      this.$refs.file.value = null;
     },
     selectFile() {
       this.file = this.$refs.file.files[0];
@@ -80,13 +83,10 @@ export default {
       }
     },
     async creatPost() {
-      if (!this.touched) {
-        alert("Nie wypełniono formularza.");
-        return;
-      }
+      this.validate();
 
       if (isErrorObjectNotEmpty(this.msg)) {
-        console.log("Validation failed!");
+        alert("Popraw wyświetlone błędy.");
         return;
       }
 
@@ -104,6 +104,7 @@ export default {
       if (req.status === 200) {
         console.log("Successfuly added new post.");
         // router.go(-1);
+        this.resetForm();
         this.$emit("getSubredditPosts");
       }
     },
