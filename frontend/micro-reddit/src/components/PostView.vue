@@ -1,7 +1,11 @@
 <template>
   <div class="w-100 d-flex flex-column align-items-center">
     <Post :post="post" :initShowDelete="true" />
-    <button class="w-75 btn btn-danger mt-2 mb-5" @click="deletePost">
+    <button
+      v-if="doesUserModerate"
+      class="w-75 btn btn-danger mt-2 mb-5"
+      @click="deletePost"
+    >
       Usuń
     </button>
     <div class="comments">
@@ -16,6 +20,7 @@
             <button
               @click="deleteComment(com.id)"
               class="btn btn-danger text-right"
+              v-if="doesUserModerate"
             >
               Usuń
             </button>
@@ -37,6 +42,7 @@ import {
   getPostComments,
   deletePostById,
   parseSinglePost,
+  doesUserModeratePost,
 } from "../service/post";
 import { deleteCommentById } from "../service/comment";
 import Post from "./Post.vue";
@@ -52,6 +58,7 @@ export default {
       id: this.$route.params.id,
       post: {},
       comments: [],
+      doesUserModerate: undefined,
       socket: io(process.env.VUE_APP_BACKEND_URL || ""),
     };
   },
@@ -95,10 +102,18 @@ export default {
         router.go(-1);
       }
     },
+    async getIsModerated() {
+      let req = await doesUserModeratePost(this.id);
+
+      if (req.status === 200) {
+        this.doesUserModerate = req.data;
+      }
+    },
   },
-  mounted() {
+  async mounted() {
     this.getCurrentPost();
     this.getPostComments();
+    await this.getIsModerated();
     this.socket.on("MESSAGE", () => {
       this.getPostComments();
     });

@@ -78,6 +78,14 @@ const searchPostsByContent = (content) =>
     })
     .catch(logError);
 
+///posts/:id/is-moderator
+const doesUserModeratePost = (postId) =>
+  axios
+    .get(`${basePath}/posts/${postId}/is-moderator`, {
+      withCredentials: true,
+    })
+    .catch(logError);
+
 const parseSinglePost = (post) => {
   const ytRegex = /watch\?v=/;
   const urlRegex =
@@ -116,4 +124,5 @@ export {
   getPostById,
   getPostComments,
   deletePostById,
+  doesUserModeratePost,
 };

@@ -195,4 +195,29 @@ router.delete("/posts/:id", async (req, res) => {
   return res.send();
 });
 
+router.get("/posts/:id/is-moderator", async (req, res) => {
+  const user = req.user;
+  const postId = req.params.id;
+
+  const subredditQuerry = await getDb().query(`
+    SELECT s.name FROM subreddit s INNER JOIN post p ON s.id=p.subreddit_id WHERE p.id=${postId};
+  `).catch(err => console.log(err));
+
+  const subName = subredditQuerry.rows[0]?.name;
+
+  const ret = await getDb().query(`
+    SELECT EXISTS(
+      SELECT * 
+      FROM subreddit_moderator sm
+      INNER JOIN subreddit s
+      ON s.id = sm.subreddit_id
+      WHERE s.name='${subName}' AND sm.user_id=${user.id}
+    );
+  `).catch(err => console.log(err));
+
+  let isModerator = ret.rows[0]?.exists;
+
+  return res.send(isModerator);
+})
+
 module.exports = router;
