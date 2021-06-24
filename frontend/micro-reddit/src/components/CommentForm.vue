@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       content: "",
-      socket: io(process.env.VUE_APP_BACKEND_URL || ""),
+      socket: io(""),
     };
   },
   props: {

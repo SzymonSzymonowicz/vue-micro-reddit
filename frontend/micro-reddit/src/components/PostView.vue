@@ -59,7 +59,7 @@ export default {
       post: {},
       comments: [],
       doesUserModerate: undefined,
-      socket: io(process.env.VUE_APP_BACKEND_URL || ""),
+      socket: io(""),
     };
   },
   methods: {

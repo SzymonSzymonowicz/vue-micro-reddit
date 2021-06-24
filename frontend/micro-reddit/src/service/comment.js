@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const basePath = "/api";
-const basePath = process.env.VUE_APP_BACKEND_URL;
+const basePath = "/api";
+// const basePath = process.env.VUE_APP_BACKEND_URL;
 const logError = (err) => console.log(err);
 
 const deleteCommentById = (id) =>

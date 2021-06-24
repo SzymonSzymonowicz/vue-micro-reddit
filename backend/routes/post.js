@@ -141,7 +141,6 @@ router.get("/posts/:id/my-vote", async (req, res) => {
   `);
 
   const hasVoted = ret.rows[0];
-  console.log("hasVoted: " + hasVoted);
 
   if (!hasVoted) {
     return res.send("none");
