@@ -2,8 +2,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/vue,vuejs,dotenv,node,intellij,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=vue,vuejs,dotenv,node,intellij,visualstudiocode
 
-### dotenv ###
-.env
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
