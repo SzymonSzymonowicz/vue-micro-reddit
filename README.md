@@ -14,3 +14,5 @@ To run the project:
     1. ```npm install express```
     1. ```cd backend```
     2. ```node ./main.js```
+4. Access the site on your browser of choice:
+    http://localhost:5000/
