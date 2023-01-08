@@ -23,7 +23,9 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../components/Register.vue"),
+      import(
+        /* webpackChunkName: "about" */ "../components/RegisterAccount.vue"
+      ),
   },
   {
     path: "/subreddits",
@@ -39,7 +41,7 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-    component: () => import("../components/Account.vue"),
+    component: () => import("../components/EditAccount.vue"),
   },
   {
     path: "/r/:name",

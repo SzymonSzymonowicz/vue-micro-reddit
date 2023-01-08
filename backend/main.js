@@ -212,7 +212,7 @@ const getDb = require("./db").getDb;
   
 initDb(function (err) {
   if (err) {
-    console.error("Connection error", err.stack)
+    console.error("Connection error: \n", err.stack)
     throw err;
   }
 

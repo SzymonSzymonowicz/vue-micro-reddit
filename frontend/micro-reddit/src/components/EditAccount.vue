@@ -26,7 +26,7 @@ import { isErrorObjectNotEmpty } from "@/utils/validationUtils";
 import { getAccount, updateAccount } from "@/service/account";
 
 export default {
-  name: "Account",
+  name: "EditAccount",
   data() {
     return {
       user: {
